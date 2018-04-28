@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWBF2-Localization-Parser", "SWBF2-Localization-Parser\SWBF2-Localization-Parser.csproj", "{1CCF27B7-67DF-4E18-AB66-19EED080CE32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CCF27B7-67DF-4E18-AB66-19EED080CE32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CCF27B7-67DF-4E18-AB66-19EED080CE32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CCF27B7-67DF-4E18-AB66-19EED080CE32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CCF27B7-67DF-4E18-AB66-19EED080CE32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14DCB40D-3B46-41C6-9027-94C0D7142B82}
+	EndGlobalSection
+EndGlobal
