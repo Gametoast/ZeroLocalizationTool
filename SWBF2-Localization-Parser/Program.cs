@@ -15,111 +15,8 @@ namespace SWBF2_Localization_Parser
 			string path = @"J:\BF2_ModTools\data_LCT\Common\Localize\english.cfg";
 			string path2 = @"J:\BF2_ModTools\data_TCW\data_TCW\Common\Localize\english.cfg";
 
-			// StreamReader vars
-			string curLine;
-			StreamReader file = new StreamReader(path2);
 			DataBase db = new DataBase();
-
-			// Iteration vars
-			Chunk parentChunk = Chunk.DataBase;
-			Chunk parentChunkParent = Chunk.DataBase;
-			Scope lastScope = new Scope();
-			Key lastKey = new Key();
-			int curIndex = 0;
-
-			while ((curLine = file.ReadLine()) != null)
-			{
-				if (curLine == "DataBase()")				// Beginning of DataBase
-				{
-					parentChunk = Chunk.DataBase;
-				}
-				else if (curLine.Contains("VarScope("))     // Beginning of VarScope
-				{
-					// Create the new Scope
-					Scope scope = new Scope();
-					scope.Name = ParseValue(curLine);
-
-					if (parentChunk == Chunk.DataBase)
-					{
-						// Add the new Scope to the DataBase container
-						db.Scopes.Add(scope);
-
-						// Get a ref to the most recent Scope
-						curIndex = db.Scopes.Count - 1;
-						lastScope = db.Scopes[curIndex];
-					}
-					else if (parentChunk == Chunk.VarScope)
-					{
-						if (lastScope != null)
-						{
-							// Add the new Scope to the DataBase container
-							lastScope.Scopes.Add(scope);
-
-							// Get a ref to the most recent Scope
-							curIndex = lastScope.Scopes.Count - 1;
-							lastScope = lastScope.Scopes[curIndex];
-						}
-					}
-
-					if (parentChunk == Chunk.DataBase)
-					{
-						parentChunkParent = parentChunk;
-					}
-					parentChunk = Chunk.VarScope;
-				}
-				else if (curLine.Contains("VarBinary("))	// Beginning of VarBinary
-				{
-					// Create the new Key
-					Key key = new Key();
-					key.Name = ParseValue(curLine);
-
-					if (parentChunk == Chunk.DataBase)
-					{
-						// Add the new Key to the DataBase container
-						db.Keys.Add(key);
-
-						// Get a ref to the most recent Key
-						curIndex = db.Keys.Count - 1;
-						lastKey = db.Keys[curIndex];
-					}
-					else if (parentChunk == Chunk.VarScope)
-					{
-						if (lastKey != null)
-						{
-							// Add the new Key to the Scope container
-							lastScope.Keys.Add(key);
-
-							// Get a ref to the most recent Key
-							curIndex = lastScope.Keys.Count - 1;
-							lastKey = lastScope.Keys[curIndex];
-						}
-					}
-
-					if (parentChunk == Chunk.DataBase || parentChunk == Chunk.VarScope)
-					{
-						parentChunkParent = parentChunk;
-					}
-					parentChunk = Chunk.VarBinary;
-				}
-				else if (parentChunk == Chunk.VarBinary)
-				{
-					if (curLine.Contains("Size("))
-					{
-						lastKey.Size = ParseValue(curLine);
-					}
-					else if (curLine.Contains("Value("))
-					{
-						lastKey.BinaryValues.Add(ParseValue(curLine));
-					}
-					else if (curLine.Contains("}"))
-					{
-						parentChunk = parentChunkParent;
-					}
-				}
-			}
-
-			//DataBase db = new DataBase();
-			//db = ParseDataBase(flattenedLines);
+			db = ParseDataBase(path2);
 
 			// Exit the application
 			Console.WriteLine("\n" + "Press any key to exit.");
@@ -133,56 +30,135 @@ namespace SWBF2_Localization_Parser
 			VarBinary
 		};
 
-		struct ParentObj
+		static DataBase ParseDataBase(string filePath)
 		{
-			Chunk ObjType;
-			int Index;
-		};
-
-		static DataBase ParseDataBase(string[] lines)
-		{
+			// StreamReader vars
+			string curLine;
+			StreamReader file = new StreamReader(filePath);
 			DataBase db = new DataBase();
 
-			Chunk curChunk;
-			bool startOfChunk = false;
-			bool endOfChunk = false;
-			int depth = 0;
-			object chunkObj;
+			// Iteration vars
+			Chunk curParentChunk = Chunk.DataBase;
+			List<Chunk> parentChunks = new List<Chunk>();
+			Scope lastScope = new Scope();
+			Key lastKey = new Key();
+			int curIndex = 0;
 
-			for (int lineIdx = 0; lineIdx < lines.Length; lineIdx++)
+			while ((curLine = file.ReadLine()) != null)
 			{
-				string curLine = lines[lineIdx];
-				string nextLine = "<EOF>";
-				if (lineIdx < lines.Length - 1)
-				{
-					nextLine = lines[lineIdx + 1];
-				}
-
-				// Determine which chunk we're in
+				// Is this a DataBase chunk header?
 				if (curLine == "DataBase()")
 				{
-					curChunk = Chunk.DataBase;
-					depth = 0;
+					// Update the current chunk
+					curParentChunk = Chunk.DataBase;
 				}
+				// Is this a VarScope chunk header?
 				else if (curLine.Contains("VarScope("))
 				{
-					curChunk = Chunk.VarScope;
+					// Create the new Scope
 					Scope scope = new Scope();
 					scope.Name = ParseValue(curLine);
+
+					if (parentChunks.Last() == Chunk.DataBase)
+					{
+						// Add the new Scope to the DataBase container
+						db.Scopes.Add(scope);
+
+						// Get a ref to the most recent Scope
+						curIndex = db.Scopes.Count - 1;
+						lastScope = db.Scopes[curIndex];
+					}
+					else if (parentChunks.Last() == Chunk.VarScope)
+					{
+						if (lastScope != null)
+						{
+							// Add the new Scope to the DataBase container
+							lastScope.Scopes.Add(scope);
+
+							// Get a ref to the most recent Scope
+							curIndex = lastScope.Scopes.Count - 1;
+							lastScope = lastScope.Scopes[curIndex];
+						}
+					}
+
+					// Update the current chunk
+					curParentChunk = Chunk.VarScope;
 				}
+				// Is this a VarBinary chunk header?
 				else if (curLine.Contains("VarBinary("))
 				{
-					curChunk = Chunk.VarBinary;
-				}
+					// Create the new Key
+					Key key = new Key();
+					key.Name = ParseValue(curLine);
 
-				// Adjust the chunk depth
-				if (curLine == "{")
-				{
-					depth++;
+					if (parentChunks.Last() == Chunk.DataBase)
+					{
+						// Add the new Key to the DataBase container
+						db.Keys.Add(key);
+
+						// Get a ref to the most recent Key
+						curIndex = db.Keys.Count - 1;
+						lastKey = db.Keys[curIndex];
+					}
+					else if (parentChunks.Last() == Chunk.VarScope)
+					{
+						if (lastKey != null)
+						{
+							// Add the new Key to the Scope container
+							lastScope.Keys.Add(key);
+
+							// Get a ref to the most recent Key
+							curIndex = lastScope.Keys.Count - 1;
+							lastKey = lastScope.Keys[curIndex];
+						}
+					}
+
+					//if (parentChunks.Last() == Chunk.DataBase || parentChunks.Last() == Chunk.VarScope)
+					//{
+					//	parentChunkParent = parentChunk;
+					//}
+					curParentChunk = Chunk.VarBinary;
 				}
-				else if (curLine == "}")
+				// Is this the beginning of a new chunk?
+				else if (curLine.Contains("{"))
 				{
-					depth--;
+					parentChunks.Add(curParentChunk);
+				}
+				// Is this the end of the current chunk?
+				else if (curLine.Contains("}"))
+				{
+					if (parentChunks.Count > 2)
+					{
+						if (parentChunks[parentChunks.Count - 1] == Chunk.VarScope && parentChunks[parentChunks.Count - 2] == Chunk.VarScope)
+						{
+							lastScope = new Scope();
+						}
+					}
+
+					parentChunks.RemoveAt(parentChunks.Count - 1);
+				}
+				// If we're in a VarBinary chunk, parse the Key properties
+				else if (parentChunks.Last() == Chunk.VarBinary)
+				{
+					if (curLine.Contains("Size("))
+					{
+						lastKey.Size = ParseValue(curLine);
+					}
+					else if (curLine.Contains("Value("))
+					{
+						lastKey.BinaryValues.Add(ParseValue(curLine));
+					}
+					//else if (curLine.Contains("}"))
+					//{
+					//	curParentChunk = parentChunkParent;
+					//}
+				}
+				else if (parentChunks.Last() == Chunk.VarScope)
+				{
+					//if (curLine.Contains("}"))
+					//{
+					//	curParentChunk = parentChunkParent;
+					//}
 				}
 			}
 
