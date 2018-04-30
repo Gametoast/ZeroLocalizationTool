@@ -16,7 +16,7 @@ namespace SWBF2_Localization_Parser
 			string path2 = @"J:\BF2_ModTools\data_TCW\data_TCW\Common\Localize\english.cfg";
 
 			DataBase db = new DataBase();
-			db = ParseDataBase(path);
+			db = ParseDataBase(path2);
 
 			//List<string> testList = new List<string>();
 			//testList.Add("00000000450034007500F500440056006700F500240057009600C6004600F500");
@@ -150,12 +150,15 @@ namespace SWBF2_Localization_Parser
 					{
 						// Close out of the Scope
 						scopes.RemoveAt(scopes.Count - 1);
+						if (scopes.Count != 0) curScope = scopes.Last();
 					}
 					else if (curParentChunk == Chunk.VarBinary)
 					{
 						curKey.Value = StringExt.ConvertUnicodeListToString(curKey.BinaryValues);
 					}
+
 					parentChunks.RemoveAt(parentChunks.Count - 1);
+					if (parentChunks.Count != 0) curParentChunk = parentChunks.Last();
 				}
 
 
