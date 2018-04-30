@@ -18,12 +18,12 @@ namespace SWBF2_Localization_Parser
 			DataBase db = new DataBase();
 			db = ParseDataBase(path);
 
-			List<string> testList = new List<string>();
-			testList.Add("00000000450034007500F500440056006700F500240057009600C6004600F500");
-			testList.Add("33000300230013001300F20003001300D000A00005002500F400050054002500");
-			testList.Add("450095000200F400640002006400250014009500540044000200750094002500");
-			testList.Add("54003500020035004500550044009400F4003500D000A0004400F4000200E400");
-			testList.Add("F400450002004400940035004500250094002400550045005400");
+			//List<string> testList = new List<string>();
+			//testList.Add("00000000450034007500F500440056006700F500240057009600C6004600F500");
+			//testList.Add("33000300230013001300F20003001300D000A00005002500F400050054002500");
+			//testList.Add("450095000200F400640002006400250014009500540044000200750094002500");
+			//testList.Add("54003500020035004500550044009400F4003500D000A0004400F4000200E400");
+			//testList.Add("F400450002004400940035004500250094002400550045005400");
 
 			//Console.WriteLine(StringExt.ConvertUnicodeListToString(testList));
 
@@ -42,8 +42,8 @@ namespace SWBF2_Localization_Parser
 		static DataBase ParseDataBase(string filePath)
 		{
 			// StreamReader vars
-			string line;
-			StreamReader file = new StreamReader(filePath);
+			//StreamReader file = new StreamReader(filePath);
+			string[] file = File.ReadAllLines(filePath);
 			DataBase db = new DataBase();
 
 			// Iteration vars
@@ -54,97 +54,96 @@ namespace SWBF2_Localization_Parser
 			Key curKey = new Key();
 			int curIndex = 0;
 
-			while ((line = file.ReadLine()) != null)
+			for (int i = 0; i < file.Length; i++)
 			{
-				// Is this a DataBase chunk header?
+				string line = file[i];
+
+				// Set the current chunk header
 				if (line == "DataBase()")
 				{
-					// Update the current chunk
 					curParentChunk = Chunk.DataBase;
 				}
-				// Is this a VarScope chunk header?
 				else if (line.Contains("VarScope("))
 				{
-					// Create the new Scope
-					Scope scope = new Scope();
-					scope.Name = ParseValue(line);
-
-					if (parentChunks.Last() == Chunk.DataBase)
-					{
-						// Add the new Scope to the DataBase container
-						db.Scopes.Add(scope);
-
-						// Get a ref to the most recent Scope
-						curIndex = db.Scopes.Count - 1;
-						//curLastScope = new Scope();
-						curScope = db.Scopes[curIndex];
-					}
-					else if (parentChunks.Last() == Chunk.VarScope)
-					{
-						if (curScope != null)
-						{
-							// Add the new Scope to the DataBase container
-							curScope.Scopes.Add(scope);
-
-							// Get a ref to the most recent Scope
-							curIndex = curScope.Scopes.Count - 1;
-							//curLastScope = new Scope();
-							curScope = curScope.Scopes[curIndex];
-							//lastScopes.Add(curLastScope);
-						}
-					}
-
-					// Update the current chunk
 					curParentChunk = Chunk.VarScope;
 				}
-				// Is this a VarBinary chunk header?
 				else if (line.Contains("VarBinary("))
 				{
-					// Create the new Key
-					Key key = new Key();
-					key.Name = ParseValue(line);
-
-					if (parentChunks.Last() == Chunk.DataBase)
-					{
-						// Add the new Key to the DataBase container
-						db.Keys.Add(key);
-
-						// Get a ref to the most recent Key
-						curIndex = db.Keys.Count - 1;
-						curKey = db.Keys[curIndex];
-					}
-					else if (parentChunks.Last() == Chunk.VarScope)
-					{
-						if (curKey != null)
-						{
-							// Add the new Key to the Scope container
-							curScope.Keys.Add(key);
-
-							// Get a ref to the most recent Key
-							curIndex = curScope.Keys.Count - 1;
-							curKey = curScope.Keys[curIndex];
-						}
-					}
-
-					//if (parentChunks.Last() == Chunk.DataBase || parentChunks.Last() == Chunk.VarScope)
-					//{
-					//	parentChunkParent = parentChunk;
-					//}
 					curParentChunk = Chunk.VarBinary;
 				}
 
 
-				// Is this the beginning of a new chunk?
+				// Are we opening a new chunk?
 				else if (line.Contains("{"))
 				{
 					if (curParentChunk == Chunk.VarScope)
 					{
+						// Initialize the new Scope
+						Scope scope = new Scope();
+						scope.Name = ParseValue(file[i - 1]);
+
+						// Add the new Scope to the DataBase container
+						if (parentChunks.Last() == Chunk.DataBase)
+						{
+							db.Scopes.Add(scope);
+
+							// Get a ref to the most recent Scope
+							curIndex = db.Scopes.Count - 1;
+							curScope = db.Scopes[curIndex];
+						}
+						// Add the new Scope to the Scope container
+						else if (parentChunks.Last() == Chunk.VarScope)
+						{
+							if (curScope != null)
+							{
+								// Add the new Scope to the DataBase container
+								curScope.Scopes.Add(scope);	//						<--  might be what's causing problems
+
+								// Get a ref to the most recent Scope
+								curIndex = curScope.Scopes.Count - 1;
+								curScope = curScope.Scopes[curIndex];
+							}
+						}
+
 						scopes.Add(curScope);
 						//curLastScope = new Scope();
 					}
+					else if (curParentChunk == Chunk.VarBinary)
+					{
+						// Initialize the new Key
+						Key key = new Key();
+						key.Name = ParseValue(file[i - 1]);
+
+						if (parentChunks.Last() == Chunk.DataBase)
+						{
+							// Add the new Key to the DataBase container
+							db.Keys.Add(key);
+
+							// Get a ref to the most recent Key
+							curIndex = db.Keys.Count - 1;
+							curKey = db.Keys[curIndex];
+						}
+						else if (parentChunks.Last() == Chunk.VarScope)
+						{
+							if (curKey != null)
+							{
+								// Add the new Key to the Scope container
+								curScope.Keys.Add(key);
+
+								// Get a ref to the most recent Key
+								curIndex = curScope.Keys.Count - 1;
+								curKey = curScope.Keys[curIndex];
+							}
+						}
+
+						//if (parentChunks.Last() == Chunk.DataBase || parentChunks.Last() == Chunk.VarScope)
+						//{
+						//	parentChunkParent = parentChunk;
+						//}
+					}
 					parentChunks.Add(curParentChunk);
 				}
-				// Is this the end of the current chunk?
+				// Are we closing the opened chunk?
 				else if (line.Contains("}"))
 				{
 					if (curParentChunk == Chunk.VarScope)
