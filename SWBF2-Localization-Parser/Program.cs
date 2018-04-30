@@ -15,8 +15,8 @@ namespace SWBF2_Localization_Parser
 			string path = @"J:\BF2_ModTools\data_LCT\Common\english2.cfg";
 			string path2 = @"J:\BF2_ModTools\data_TCW\data_TCW\Common\Localize\english.cfg";
 
-			//DataBase db = new DataBase();
-			//db = ParseDataBase(path);
+			DataBase db = new DataBase();
+			db = ParseDataBase(path);
 
 			List<string> testList = new List<string>();
 			testList.Add("00000000450034007500F500440056006700F500240057009600C6004600F500");
@@ -25,7 +25,7 @@ namespace SWBF2_Localization_Parser
 			testList.Add("54003500020035004500550044009400F4003500D000A0004400F4000200E400");
 			testList.Add("F400450002004400940035004500250094002400550045005400");
 
-			Console.WriteLine(StringExt.ConvertUnicodeListToString(testList));
+			//Console.WriteLine(StringExt.ConvertUnicodeListToString(testList));
 
 			// Exit the application
 			Console.WriteLine("\n" + "Press any key to exit.");
@@ -42,32 +42,32 @@ namespace SWBF2_Localization_Parser
 		static DataBase ParseDataBase(string filePath)
 		{
 			// StreamReader vars
-			string curLine;
+			string line;
 			StreamReader file = new StreamReader(filePath);
 			DataBase db = new DataBase();
 
 			// Iteration vars
 			Chunk curParentChunk = Chunk.DataBase;
 			List<Chunk> parentChunks = new List<Chunk>();
-			Scope curLastScope = new Scope();
-			List<Scope> lastScopes = new List<Scope>();
-			Key lastKey = new Key();
+			Scope curScope = new Scope();
+			List<Scope> scopes = new List<Scope>();
+			Key curKey = new Key();
 			int curIndex = 0;
 
-			while ((curLine = file.ReadLine()) != null)
+			while ((line = file.ReadLine()) != null)
 			{
 				// Is this a DataBase chunk header?
-				if (curLine == "DataBase()")
+				if (line == "DataBase()")
 				{
 					// Update the current chunk
 					curParentChunk = Chunk.DataBase;
 				}
 				// Is this a VarScope chunk header?
-				else if (curLine.Contains("VarScope("))
+				else if (line.Contains("VarScope("))
 				{
 					// Create the new Scope
 					Scope scope = new Scope();
-					scope.Name = ParseValue(curLine);
+					scope.Name = ParseValue(line);
 
 					if (parentChunks.Last() == Chunk.DataBase)
 					{
@@ -77,19 +77,19 @@ namespace SWBF2_Localization_Parser
 						// Get a ref to the most recent Scope
 						curIndex = db.Scopes.Count - 1;
 						//curLastScope = new Scope();
-						curLastScope = db.Scopes[curIndex];
+						curScope = db.Scopes[curIndex];
 					}
 					else if (parentChunks.Last() == Chunk.VarScope)
 					{
-						if (curLastScope != null)
+						if (curScope != null)
 						{
 							// Add the new Scope to the DataBase container
-							curLastScope.Scopes.Add(scope);
+							curScope.Scopes.Add(scope);
 
 							// Get a ref to the most recent Scope
-							curIndex = curLastScope.Scopes.Count - 1;
+							curIndex = curScope.Scopes.Count - 1;
 							//curLastScope = new Scope();
-							curLastScope = curLastScope.Scopes[curIndex];
+							curScope = curScope.Scopes[curIndex];
 							//lastScopes.Add(curLastScope);
 						}
 					}
@@ -98,11 +98,11 @@ namespace SWBF2_Localization_Parser
 					curParentChunk = Chunk.VarScope;
 				}
 				// Is this a VarBinary chunk header?
-				else if (curLine.Contains("VarBinary("))
+				else if (line.Contains("VarBinary("))
 				{
 					// Create the new Key
 					Key key = new Key();
-					key.Name = ParseValue(curLine);
+					key.Name = ParseValue(line);
 
 					if (parentChunks.Last() == Chunk.DataBase)
 					{
@@ -111,18 +111,18 @@ namespace SWBF2_Localization_Parser
 
 						// Get a ref to the most recent Key
 						curIndex = db.Keys.Count - 1;
-						lastKey = db.Keys[curIndex];
+						curKey = db.Keys[curIndex];
 					}
 					else if (parentChunks.Last() == Chunk.VarScope)
 					{
-						if (lastKey != null)
+						if (curKey != null)
 						{
 							// Add the new Key to the Scope container
-							curLastScope.Keys.Add(key);
+							curScope.Keys.Add(key);
 
 							// Get a ref to the most recent Key
-							curIndex = curLastScope.Keys.Count - 1;
-							lastKey = curLastScope.Keys[curIndex];
+							curIndex = curScope.Keys.Count - 1;
+							curKey = curScope.Keys[curIndex];
 						}
 					}
 
@@ -132,39 +132,44 @@ namespace SWBF2_Localization_Parser
 					//}
 					curParentChunk = Chunk.VarBinary;
 				}
+
+
 				// Is this the beginning of a new chunk?
-				else if (curLine.Contains("{"))
+				else if (line.Contains("{"))
 				{
 					if (curParentChunk == Chunk.VarScope)
 					{
-						lastScopes.Add(curLastScope);
+						scopes.Add(curScope);
 						//curLastScope = new Scope();
 					}
 					parentChunks.Add(curParentChunk);
 				}
 				// Is this the end of the current chunk?
-				else if (curLine.Contains("}"))
+				else if (line.Contains("}"))
 				{
 					if (curParentChunk == Chunk.VarScope)
 					{
-						lastScopes.RemoveAt(lastScopes.Count - 1);
+						// Close out of the Scope
+						scopes.RemoveAt(scopes.Count - 1);
 					}
 					else if (curParentChunk == Chunk.VarBinary)
 					{
-
+						curKey.Value = StringExt.ConvertUnicodeListToString(curKey.BinaryValues);
 					}
 					parentChunks.RemoveAt(parentChunks.Count - 1);
 				}
+
+
 				// If we're in a VarBinary chunk, parse the Key properties
 				else if (parentChunks.Last() == Chunk.VarBinary)
 				{
-					if (curLine.Contains("Size("))
+					if (line.Contains("Size("))
 					{
-						lastKey.Size = ParseValue(curLine);
+						curKey.Size = ParseValue(line);
 					}
-					else if (curLine.Contains("Value("))
+					else if (line.Contains("Value("))
 					{
-						lastKey.BinaryValues.Add(ParseValue(curLine));
+						curKey.BinaryValues.Add(ParseValue(line));
 					}
 					//else if (curLine.Contains("}"))
 					//{
@@ -307,37 +312,6 @@ namespace SWBF2_Localization_Parser
 		public Key()
 		{
 			BinaryValues = new List<string>();
-		}
-	}
-
-	class BinDataBase
-	{
-		public List<BinScope> Scopes { get; set; }
-
-		public BinDataBase(string[] fileLines)
-		{
-
-		}
-	}
-
-	class BinScope
-	{
-		public string Name { get; set; }
-		public List<BinScope> Scopes { get; set; }
-		public List<BinKey> Keys { get; set; }
-	}
-
-	class BinKey
-	{
-		public string Name { get; set; }
-		public int Size { get; set; }
-		public List<string> Values { get; set; }
-
-		public string ParseValues()
-		{
-			string parsedValues = "";
-
-			return parsedValues;
 		}
 	}
 }
