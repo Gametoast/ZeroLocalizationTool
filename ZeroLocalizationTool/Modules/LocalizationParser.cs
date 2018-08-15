@@ -239,6 +239,51 @@ namespace ZeroLocalizationTool.Modules
 			Scopes = new List<Scope>();
 			Keys = new List<Key>();
 		}
+
+		public void WriteToFile(string filePath)
+		{
+			List<string> lines = new List<string>();
+			int curIndentLevel = 0;
+
+			string Indent(int indentLevel)
+			{
+				string s = "";
+
+				for (int i = 0; i < indentLevel; i++)
+				{
+					s += "  ";
+				}
+
+				return s;
+			}
+
+			void AddLine(string s)
+			{
+				lines.Add(Indent(curIndentLevel) + s);
+			}
+
+			// OPEN DATABASE
+			AddLine("DataBase()");
+			AddLine("{");
+
+			curIndentLevel++;
+
+			foreach (Scope scope in Scopes)
+			{
+				AddLine(string.Format("VarScope(\"{0}\")", scope.Name));
+				AddLine("{");
+				AddLine("}");
+			}
+
+			curIndentLevel--;
+
+			// CLOSE DATABASE
+			AddLine("}");
+
+
+			// Write the lines to file
+			File.WriteAllLines(filePath, lines);
+		}
 	}
 
 	public class Scope

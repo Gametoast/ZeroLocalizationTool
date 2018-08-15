@@ -18,6 +18,7 @@ namespace ZeroLocalizationTool
 
 			DataBase db = new DataBase();
 			db = LocalizationParser.ParseDataBase(path2);
+			db.WriteToFile(@"J:\BF2_ModTools\data_LCT\Common\english3.cfg");
 
 			//List<string> testList = new List<string>();
 			//testList.Add("00000000450034007500F500440056006700F500240057009600C6004600F500");
