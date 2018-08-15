@@ -18,6 +18,11 @@ namespace ZeroLocalizationTool.Modules
 			VarBinary
 		}
 
+		/// <summary>
+		/// Constructs a DataBase from the specified localization file.
+		/// </summary>
+		/// <param name="filePath">Path of localization file to parse.</param>
+		/// <returns>DataBase containing the localization file's parsed contents.</returns>
 		public static DataBase ParseDataBase(string filePath)
 		{
 			// StreamReader vars
@@ -33,6 +38,7 @@ namespace ZeroLocalizationTool.Modules
 			Key curKey = new Key();
 			int curIndex = 0;
 
+			// Go through each line of the file
 			for (int i = 0; i < file.Length; i++)
 			{
 				string line = file[i];
@@ -169,8 +175,17 @@ namespace ZeroLocalizationTool.Modules
 			return db;
 		}
 
+		/// <summary>
+		/// Gets the value between the parantheses and quotation marks in the given string.
+		/// Ex: Passing `VarScope("build")` would return `build`.
+		/// </summary>
+		/// <param name="line">String to parse.</param>
+		/// <returns>Parsed value.</returns>
 		public static string ParseValue(string line)
 		{
+			string parsedValue;
+
+			// Replace quotation marks with '|'
 			string formattedLine = line.Replace("\"", "|");
 
 			bool useQuotations = false;
@@ -179,6 +194,7 @@ namespace ZeroLocalizationTool.Modules
 				useQuotations = true;
 			}
 
+			// Get the value of the string from within the parantheses/quotation marks
 			char openChar, closeChar;
 			int openIdx, closeIdx;
 			if (useQuotations)
@@ -198,8 +214,7 @@ namespace ZeroLocalizationTool.Modules
 				closeIdx = formattedLine.LastIndexOf(closeChar);
 			}
 
-			string parsedValue;
-
+			// Remove any quotation marks and such from the final string
 			if (openIdx != closeIdx)
 			{
 				parsedValue = StringExt.SubstringIdx(formattedLine, openIdx, closeIdx);
