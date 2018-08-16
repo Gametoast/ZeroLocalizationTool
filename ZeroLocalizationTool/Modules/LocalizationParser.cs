@@ -240,86 +240,159 @@ namespace ZeroLocalizationTool.Modules
 			Keys = new List<Key>();
 		}
 
+		/// <summary>
+		/// Writes the DataBase to the specified file path.
+		/// </summary>
+		/// <param name="filePath">Path to write the file.</param>
+		/// <exception cref="ObjectDisposedException"></exception>
+		/// <exception cref="PathTooLongException"></exception>
+		/// <exception cref="IOException"></exception>
+		/// <exception cref="UnauthorizedAccessException"></exception>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException"></exception>
 		public void WriteToFile(string filePath)
 		{
-			StreamWriter sw = new StreamWriter(filePath, false, Encoding.ASCII);
-			int curIndentLevel = 0;
-
-			#region Methods
-
-			/// <summary>
-			/// Indents the given string based on the current indentation level.
-			/// </summary>
-			string Indent(int indentLevel)
+			try
 			{
-				string s = "";
+				StreamWriter sw = new StreamWriter(filePath, false, Encoding.ASCII);
+				int curIndentLevel = 0;
 
-				for (int i = 0; i < indentLevel; i++)
+				#region Methods
+
+				/// <summary>
+				/// Indents the given string based on the current indentation level.
+				/// </summary>
+				string Indent(int indentLevel)
 				{
-					s += "  ";
+					string s = "";
+
+					for (int i = 0; i < indentLevel; i++)
+					{
+						s += "  ";
+					}
+
+					return s;
 				}
 
-				return s;
-			}
+				/// <summary>
+				/// Shortcut method to write the given string to the file with the appropriate level of indentation.
+				/// </summary>
+				void AddLine(string s)
+				{
+					sw.WriteLine(Indent(curIndentLevel) + s);
+				}
 
-			/// <summary>
-			/// Shortcut method to write the given string to the file with the appropriate level of indentation.
-			/// </summary>
-			void AddLine(string s)
-			{
-				sw.WriteLine(Indent(curIndentLevel) + s);
-			}
+				/// <summary>
+				/// Writes the given Scope and its contents to the file.
+				/// </summary>
+				void ParseScope(Scope scope)
+				{
+					AddLine(string.Format("VarScope(\"{0}\")", scope.Name));
+					AddLine("{");
 
-			/// <summary>
-			/// Writes the given Scope and its contents to the file.
-			/// </summary>
-			void ParseScope(Scope scope)
-			{
-				AddLine(string.Format("VarScope(\"{0}\")", scope.Name));
+					curIndentLevel++;
+
+					// Parse any child scopes recursively
+					foreach (Scope childScope in scope.Scopes)
+					{
+						ParseScope(childScope);
+					}
+
+					// Parse keys
+					foreach (Key key in scope.Keys)
+					{
+						ParseKey(key);
+					}
+
+					curIndentLevel--;
+
+					AddLine("}");
+				}
+
+				/// <summary>
+				/// Writes the given Key and its contents to the file.
+				/// </summary>
+				void ParseKey(Key key)
+				{
+					AddLine(string.Format("VarBinary(\"{0}\")", key.Name));
+					AddLine("{");
+					curIndentLevel++;
+
+					// Write 'Size' value
+					AddLine(string.Format("Size({0});", key.Size));
+
+					// Write each binary 'Value'
+					foreach (string value in key.BinaryValues)
+					{
+						AddLine(string.Format("Value(\"{0}\");", value));
+					}
+
+					curIndentLevel--;
+					AddLine("}");
+				}
+
+				#endregion Methods
+
+				// OPEN DATABASE
+				AddLine("DataBase()");
 				AddLine("{");
-
 				curIndentLevel++;
 
-				// Parse any child scopes recursively
-				foreach (Scope childScope in scope.Scopes)
+				// Write root-level Scopes
+				foreach (Scope scope in Scopes)
 				{
-					ParseScope(childScope);
+					ParseScope(scope);
 				}
 
-				// Parse keys
-				foreach (Key key in scope.Keys)
+				// Write root-level Keys
+				foreach (Key key in Keys)
 				{
 					ParseKey(key);
 				}
 
+				// CLOSE DATABASE
 				curIndentLevel--;
-
 				AddLine("}");
-			}
 
-			/// <summary>
-			/// Writes the given Key and its contents to the file.
-			/// </summary>
-			void ParseKey(Key key)
+				// Done writing to the file
+				sw.Close();
+			}
+			catch (ObjectDisposedException ex)
 			{
-				AddLine(string.Format("VarBinary(\"{0}\")", key.Name));
-				AddLine("{");
-				curIndentLevel++;
-
-				// Write 'Size' value
-				AddLine(string.Format("Size({0});", key.Size));
-
-				// Write each binary 'Value'
-				foreach (string value in key.BinaryValues)
-				{
-					AddLine(string.Format("Value(\"{0}\");", value));
-				}
-
-				curIndentLevel--;
-				AddLine("}");
+				Trace.WriteLine(ex.Message);
+				throw new ObjectDisposedException(ex.ObjectName, ex.Message);
 			}
-
-			#endregion Methods
+			catch (PathTooLongException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				throw new PathTooLongException(ex.Message, ex);
+			}
+			catch (IOException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				throw new IOException(ex.Message, ex);
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				throw new UnauthorizedAccessException(ex.Message, ex);
+			}
+			catch (System.Security.SecurityException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				throw new System.Security.SecurityException(ex.Message, ex);
+			}
+			catch (ArgumentNullException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				throw new ArgumentNullException(ex.Message, ex);
+			}
+			catch (ArgumentException ex)
+			{
+				Trace.WriteLine(ex.Message);
+				throw new ArgumentException(ex.Message, ex);
+			}
+		}
 
 		/// <summary>
 		/// Try to get the Key at the specified localized key path.
