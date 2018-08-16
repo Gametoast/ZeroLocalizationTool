@@ -321,31 +321,88 @@ namespace ZeroLocalizationTool.Modules
 
 			#endregion Methods
 
+		/// <summary>
+		/// Try to get the Key at the specified localized key path.
+		/// </summary>
+		/// <param name="keyPath">Localized key path. Should be formatted the same way as in Lua scripts. Ex: "scope1.scope2.key"</param>
+		/// <returns>Key at the specified localized key path.</returns>
+		public Key GetKey(string keyPath)
+		{
+			Key keyToFind = null;
+			string[] splitPath = keyPath.Split('.');
+			int level = 0;
+			bool foundKey = false;
 
-			// OPEN DATABASE
-			AddLine("DataBase()");
-			AddLine("{");
-			curIndentLevel++;
+			#region Methods
 
-			// Write root-level Scopes
-			foreach (Scope scope in Scopes)
+			/// <summary>
+			/// Checks if the given Scope matches the Scope name at the current level's path element. If not found, looks in any child Scopes.
+			/// </summary>
+			void GetScope(Scope scope)
 			{
-				ParseScope(scope);
+				// Does this Scope match the current level's path element?
+				if (scope.Name == splitPath[level])
+				{
+					level++;
+
+					// Are we at the final path element, aka the Key?
+					if (level == splitPath.Length - 1)
+					{
+						// Try to find the Key matching the final path element
+						foreach (Key key in scope.Keys)
+						{
+							if (key.Name == splitPath[level])
+							{
+								keyToFind = key;
+								foundKey = true;
+								break;
+							}
+						}
+					}
+					// Are there still more Scope levels?
+					else if (level < splitPath.Length)
+					{
+						// Recursively go through any child Scopes
+						foreach (Scope childScope in scope.Scopes)
+						{
+							GetScope(childScope);
+
+							if (foundKey) break;
+						}
+					}
+				}
 			}
 
-			// Write root-level Keys
-			foreach (Key key in Keys)
+			#endregion Methods
+			
+			// Is this a root-level key?
+			if (splitPath.Length == 1)
 			{
-				ParseKey(key);
+				foreach (Key key in Keys)
+				{
+					if (key.Name == splitPath[0])
+					{
+						keyToFind = key;
+						foundKey = true;
+					}
+				}
 			}
 
-			// CLOSE DATABASE
-			curIndentLevel--;
-			AddLine("}");
+			if (!foundKey)
+			{
+				// Start looking through the Scopes
+				if (splitPath.Length > 1)
+				{
+					foreach (Scope scope in Scopes)
+					{
+						GetScope(scope);
 
+						if (foundKey) break;
+					}
+				}
+			}
 
-			// Done writing to the file
-			sw.Close();
+			return keyToFind;
 		}
 	}
 
