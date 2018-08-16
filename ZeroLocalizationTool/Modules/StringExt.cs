@@ -60,10 +60,30 @@ namespace ZeroLocalizationTool.Modules
 			return new string(chars);
 		}
 
+		/// <summary>
+		/// Converts a readable string into a list of binary strings (each item being 64 unicode characters, or 16 string characters when parsed).
+		/// </summary>
+		/// <param name="s">String to convert.</param>
+		/// <returns>List of binary strings.</returns>
 		public static List<string> ConvertStringToUnicodeList(string s)
 		{
 			List<string> list = new List<string>();
-			char[] chars = s.ToCharArray();
+			string[] stringArray = Split(s, 16).ToArray();
+
+			// Go through each segment of 16 characters and convert it to unicode
+			for (int i = 0; i < stringArray.Length; i++)
+			{
+				string unicodeStr = "";
+				char[] chars = stringArray[i].ToCharArray();
+
+				// Convert each character to unicode and reverse it
+				for (int c = 0; c < chars.Length; c++)
+				{
+					unicodeStr += Reverse(Convert.ToByte(chars[c]).ToString("x4"));
+				}
+
+				list.Add(unicodeStr);
+			}
 
 			return list;
 		}

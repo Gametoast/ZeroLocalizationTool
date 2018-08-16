@@ -13,12 +13,21 @@ namespace ZeroLocalizationTool
 	{
 		static void Main(string[] args)
 		{
-			string path = @"J:\BF2_ModTools\data_LCT\Common\english2.cfg";
+			string path = @"J:\BF2_ModTools\data_LCT\Common\Localize\english.cfg";
 			string path2 = @"J:\BF2_ModTools\data_TCW\data_TCW\Common\Localize\english.cfg";
 
 			DataBase db = new DataBase();
 			db = LocalizationParser.ParseDataBase(path2);
 			db.WriteToFile(@"J:\BF2_ModTools\data_LCT\Common\english3.cfg");
+
+			//string testString = "\0\0TCW_Dev_Build_30813/01\r\nPROPERTY OF FRAYED WIRES STUDIOS\r\nDO NOT DISTRIBUTE";
+			//List<string> testBinaryList = StringExt.ConvertStringToUnicodeList(testString);
+			//foreach (string s in testBinaryList)
+			//{
+			//	Console.WriteLine(s);
+			//}
+			//Console.WriteLine("\n\nSize: " + testString.Length * 2);
+			//Console.WriteLine("\n\n" + StringExt.ConvertUnicodeListToString(testBinaryList));
 
 			//List<string> testList = new List<string>();
 			//testList.Add("00000000450034007500F500440056006700F500240057009600C6004600F500");

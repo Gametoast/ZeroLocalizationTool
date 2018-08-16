@@ -373,5 +373,23 @@ namespace ZeroLocalizationTool.Modules
 		{
 			BinaryValues = new List<string>();
 		}
+
+		/// <summary>
+		/// Sets a new value for this Key. Automatically handles setting the binary Values and the Size.
+		/// </summary>
+		/// <param name="str">Readable string to save to the key.</param>
+		public void SetValue(string str)
+		{
+			// TODO: need to figure out how the behaviour of the first two unicode characters and add logic to make sure the Value always starts with the right ones
+			// Set the readable value
+			Value = str;
+
+			// Set the new size
+			Size = (str.Length * 2).ToString();
+
+			// Convert readable string to binary unicode
+			BinaryValues.Clear();
+			BinaryValues = StringExt.ConvertStringToUnicodeList(str);
+		}
 	}
 }
