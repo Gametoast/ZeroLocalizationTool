@@ -7,6 +7,13 @@ namespace ZeroLocalizationTool.Modules
 {
 	public static class StringExt
 	{
+		/// <summary>
+		/// Takes the substring of a string based on a start and end position instead of length.
+		/// </summary>
+		/// <param name="value">String to take the substring from.</param>
+		/// <param name="startIndex">Index of the character in the string where the substring should start.</param>
+		/// <param name="endIndex">Index of the character in the string where the substring should end.</param>
+		/// <returns>Substring of the specified string.</returns>
 		public static string SubstringIdx(this string value, int startIndex, int endIndex)
 		{
 			if (value == null) throw new ArgumentNullException();
@@ -18,6 +25,12 @@ namespace ZeroLocalizationTool.Modules
 			return value.Substring(startIndex, length);
 		}
 
+		/// <summary>
+		/// Reverses a string.
+		/// Ex: "abcd" would become "dcba".
+		/// </summary>
+		/// <param name="s">String to reverse.</param>
+		/// <returns>Reversed string.</returns>
 		public static string Reverse(string s)
 		{
 			char[] charArray = s.ToCharArray();
@@ -25,6 +38,11 @@ namespace ZeroLocalizationTool.Modules
 			return new string(charArray);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="s"></param>
+		/// <returns></returns>
 		public static string ConvertUnicodeListToString(List<string> s)
 		{
 			string combinedStr = String.Concat(s);
@@ -42,6 +60,20 @@ namespace ZeroLocalizationTool.Modules
 			return new string(chars);
 		}
 
+		public static List<string> ConvertStringToUnicodeList(string s)
+		{
+			List<string> list = new List<string>();
+			char[] chars = s.ToCharArray();
+
+			return list;
+		}
+
+		/// <summary>
+		/// Splits the specified string into chunks of the specified size. 
+		/// </summary>
+		/// <param name="str">String to split into chunks.</param>
+		/// <param name="chunkSize">Number of characters per split string.</param>
+		/// <returns>IEnumerable collection of the split string.</returns>
 		public static IEnumerable<string> Split(string str, int chunkSize)
 		{
 			return Enumerable.Range(0, str.Length / chunkSize)
