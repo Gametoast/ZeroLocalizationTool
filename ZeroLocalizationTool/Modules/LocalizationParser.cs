@@ -242,9 +242,12 @@ namespace ZeroLocalizationTool.Modules
 
 		public void WriteToFile(string filePath)
 		{
-			List<string> lines = new List<string>();
+			StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8);
 			int curIndentLevel = 0;
 
+			/// <summary>
+			/// Indents the given string based on the current indentation level.
+			/// </summary>
 			string Indent(int indentLevel)
 			{
 				string s = "";
@@ -257,10 +260,49 @@ namespace ZeroLocalizationTool.Modules
 				return s;
 			}
 
+			/// <summary>
+			/// Writes the given Scope and its contents to the file.
+			/// </summary>
+			void ParseScope(Scope scope)
+			{
+				AddLine(string.Format("VarScope(\"{0}\")", scope.Name));
+				AddLine("{");
+
+				curIndentLevel++;
+
+				foreach (Scope childScope in scope.Scopes)
+				{
+					ParseScope(childScope);
+				}
+
+				foreach (Key key in scope.Keys)
+				{
+					AddLine(string.Format("VarBinary(\"{0}\")", key.Name));
+					AddLine("{");
+
+					curIndentLevel++;
+
+					// TODO: write Size and Values
+
+					curIndentLevel--;
+
+					AddLine("}");
+				}
+
+				curIndentLevel--;
+
+				AddLine("}");
+			}
+
+			/// <summary>
+			/// Shortcut method to write the given string to the file with the appropriate level of indentation.
+			/// </summary>
 			void AddLine(string s)
 			{
-				lines.Add(Indent(curIndentLevel) + s);
+				sw.WriteLine(Indent(curIndentLevel) + s);
 			}
+
+
 
 			// OPEN DATABASE
 			AddLine("DataBase()");
@@ -270,9 +312,7 @@ namespace ZeroLocalizationTool.Modules
 
 			foreach (Scope scope in Scopes)
 			{
-				AddLine(string.Format("VarScope(\"{0}\")", scope.Name));
-				AddLine("{");
-				AddLine("}");
+				ParseScope(scope);
 			}
 
 			curIndentLevel--;
@@ -281,8 +321,8 @@ namespace ZeroLocalizationTool.Modules
 			AddLine("}");
 
 
-			// Write the lines to file
-			File.WriteAllLines(filePath, lines);
+			// Done writing to the file
+			sw.Close();
 		}
 	}
 
