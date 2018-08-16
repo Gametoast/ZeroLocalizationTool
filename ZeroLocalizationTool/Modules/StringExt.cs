@@ -72,12 +72,12 @@ namespace ZeroLocalizationTool.Modules
 		/// Splits the specified string into chunks of the specified size. 
 		/// </summary>
 		/// <param name="str">String to split into chunks.</param>
-		/// <param name="chunkSize">Number of characters per split string.</param>
+		/// <param name="maxChunkSize">Max number of characters per split string.</param>
 		/// <returns>IEnumerable collection of the split string.</returns>
-		public static IEnumerable<string> Split(string str, int chunkSize)
+		public static IEnumerable<string> Split(string str, int maxChunkSize)
 		{
-			return Enumerable.Range(0, str.Length / chunkSize)
-				.Select(i => str.Substring(i * chunkSize, chunkSize));
+			for (int i = 0; i < str.Length; i += maxChunkSize)
+				yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
 		}
 	}
 }
