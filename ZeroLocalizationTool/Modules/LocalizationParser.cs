@@ -242,7 +242,7 @@ namespace ZeroLocalizationTool.Modules
 
 		public void WriteToFile(string filePath)
 		{
-			StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8);
+			StreamWriter sw = new StreamWriter(filePath, false, Encoding.ASCII);
 			int curIndentLevel = 0;
 
 			#region Methods
