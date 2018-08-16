@@ -245,6 +245,8 @@ namespace ZeroLocalizationTool.Modules
 			StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8);
 			int curIndentLevel = 0;
 
+			#region Methods
+
 			/// <summary>
 			/// Indents the given string based on the current indentation level.
 			/// </summary>
@@ -261,6 +263,14 @@ namespace ZeroLocalizationTool.Modules
 			}
 
 			/// <summary>
+			/// Shortcut method to write the given string to the file with the appropriate level of indentation.
+			/// </summary>
+			void AddLine(string s)
+			{
+				sw.WriteLine(Indent(curIndentLevel) + s);
+			}
+
+			/// <summary>
 			/// Writes the given Scope and its contents to the file.
 			/// </summary>
 			void ParseScope(Scope scope)
@@ -270,23 +280,16 @@ namespace ZeroLocalizationTool.Modules
 
 				curIndentLevel++;
 
+				// Parse any child scopes recursively
 				foreach (Scope childScope in scope.Scopes)
 				{
 					ParseScope(childScope);
 				}
 
+				// Parse keys
 				foreach (Key key in scope.Keys)
 				{
-					AddLine(string.Format("VarBinary(\"{0}\")", key.Name));
-					AddLine("{");
-
-					curIndentLevel++;
-
-					// TODO: write Size and Values
-
-					curIndentLevel--;
-
-					AddLine("}");
+					ParseKey(key);
 				}
 
 				curIndentLevel--;
@@ -295,29 +298,49 @@ namespace ZeroLocalizationTool.Modules
 			}
 
 			/// <summary>
-			/// Shortcut method to write the given string to the file with the appropriate level of indentation.
+			/// Writes the given Key and its contents to the file.
 			/// </summary>
-			void AddLine(string s)
+			void ParseKey(Key key)
 			{
-				sw.WriteLine(Indent(curIndentLevel) + s);
+				AddLine(string.Format("VarBinary(\"{0}\")", key.Name));
+				AddLine("{");
+				curIndentLevel++;
+
+				// Write 'Size' value
+				AddLine(string.Format("Size({0});", key.Size));
+
+				// Write each binary 'Value'
+				foreach (string value in key.BinaryValues)
+				{
+					AddLine(string.Format("Value(\"{0}\");", value));
+				}
+
+				curIndentLevel--;
+				AddLine("}");
 			}
 
+			#endregion Methods
 
 
 			// OPEN DATABASE
 			AddLine("DataBase()");
 			AddLine("{");
-
 			curIndentLevel++;
 
+			// Write root-level Scopes
 			foreach (Scope scope in Scopes)
 			{
 				ParseScope(scope);
 			}
 
-			curIndentLevel--;
+			// Write root-level Keys
+			foreach (Key key in Keys)
+			{
+				ParseKey(key);
+			}
 
 			// CLOSE DATABASE
+			curIndentLevel--;
 			AddLine("}");
 
 
