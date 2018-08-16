@@ -39,10 +39,10 @@ namespace ZeroLocalizationTool.Modules
 		}
 
 		/// <summary>
-		/// 
+		/// Converts a list of binary strings (each item being 64 unicode characters, or 16 string characters when parsed) to a single, readable string.
 		/// </summary>
-		/// <param name="s"></param>
-		/// <returns></returns>
+		/// <param name="s">List of binary strings to convert.</param>
+		/// <returns>Readable string.</returns>
 		public static string ConvertUnicodeListToString(List<string> s)
 		{
 			string combinedStr = String.Concat(s);
