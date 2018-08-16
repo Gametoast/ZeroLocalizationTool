@@ -18,8 +18,16 @@ namespace ZeroLocalizationTool
 			string path3 = @"J:\BF2_ModTools\data_LCT\Common\Localize\english.cfg";
 
 			DataBase db = new DataBase();
-			db = LocalizationParser.ParseDataBase(path2);
+			db = LocalizationParser.ParseDataBase(path3);
+			//Console.WriteLine(db.GetKey("entity.all.bldg_blisterturret").Value);
+			//Console.WriteLine(db.GetKey("testrootkey").Value);
+
+			Key testrootkey = db.GetKey("testrootkey");
+			testrootkey.SetValue("new test value");
+
+
 			db.WriteToFile(@"J:\BF2_ModTools\data_LCT\Common\english3.cfg");
+			Console.WriteLine(StringExt.ConvertUnicodeListToString(db.GetKey("testrootkey").BinaryValues));
 
 			//string testString = "\u0002";
 			//Console.WriteLine(testString);
