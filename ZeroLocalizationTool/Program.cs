@@ -37,7 +37,7 @@ namespace ZeroLocalizationTool
 					if (args.Length == 1)
 					{
 						Command_Help();
-						Exit();
+						Exit(0);
 					}
 					else if (args.Length > 1)
 					{
@@ -54,7 +54,7 @@ namespace ZeroLocalizationTool
 								Command_Usage("get-value");
 								break;
 						}
-						Exit();
+						Exit(0);
 					}
 				}
 				else
@@ -112,11 +112,13 @@ namespace ZeroLocalizationTool
 					if (parsedArgs.ContainsKey("set-value"))
 					{
 						Command_SetValue();
+						Exit(0, false);
 					}
 
 					if (parsedArgs.ContainsKey("get-value"))
 					{
 						Command_GetValue();
+						Exit(0);
 					}
 
 
@@ -199,14 +201,18 @@ namespace ZeroLocalizationTool
 		}
 
 		/// <summary>
-		/// Prompts the user to enter any key to quit the application with an exit code.
+		/// Optionally prompts the user to enter any key and then quits the application with an exit code.
 		/// </summary>
+		/// <param name="promptUser">True, prompt user to enter a key before exiting. False to exit immediately.</param>
 		/// <param name="exitCode">Exit code to quit with. 0 = no errors; 1 = argument error; 2 = file not found; 3 = exception error</param>
-		static void Exit(int exitCode = 0)
+		static void Exit(int exitCode, bool promptUser = true)
 		{
 			// Exit the application
-			Console.WriteLine("\n" + "Press any key to exit.");
-			Console.ReadKey();
+			if (promptUser)
+			{
+				Console.WriteLine("\n" + "Press any key to exit.");
+				Console.ReadKey();
+			}
 			Environment.Exit(exitCode);
 		}
 
