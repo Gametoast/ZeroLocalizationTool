@@ -438,6 +438,7 @@ namespace ZeroLocalizationTool.Modules
 		/// </summary>
 		/// <param name="keyPath">Localized key path. Should be formatted the same way as in Lua scripts. Ex: "scope1.scope2.key"</param>
 		/// <returns>Key at the specified localized key path.</returns>
+		/// <exception cref="LocalizedKeyNotFoundException"></exception>
 		public Key GetKey(string keyPath)
 		{
 			Key keyToFind = null;
@@ -514,6 +515,11 @@ namespace ZeroLocalizationTool.Modules
 				}
 			}
 
+			if (!foundKey)
+			{
+				throw new LocalizedKeyNotFoundException(string.Format("Localized key not found in localization file."), keyPath);
+			}
+
 			return keyToFind;
 		}
 	}
@@ -567,6 +573,63 @@ namespace ZeroLocalizationTool.Modules
 			// Convert readable string to binary unicode
 			BinaryValues.Clear();
 			BinaryValues = StringExt.ConvertStringToUnicodeList("\u0000" + "\u0000" + Value);
+		}
+	}
+
+	public class LocalizedKeyNotFoundException: Exception
+	{
+		/// <summary>
+		/// Path of localized key.
+		/// </summary>
+		public string KeyPath { get; set; }
+
+		/// <summary>
+		/// The exception thrown when the localized key is not found in the localization file.
+		/// </summary>
+		public LocalizedKeyNotFoundException()
+		{
+		}
+
+		/// <summary>
+		/// The exception thrown when the localized key is not found in the localization file.
+		/// </summary>
+		/// <param name="message">Exception message.</param>
+		public LocalizedKeyNotFoundException(string message)
+			: base(message)
+		{
+		}
+
+		/// <summary>
+		/// The exception thrown when the localized key is not found in the localization file.
+		/// </summary>
+		/// <param name="message">Exception message.</param>
+		/// <param name="inner">Inner exception.</param>
+		public LocalizedKeyNotFoundException(string message, Exception inner)
+			: base(message, inner)
+		{
+		}
+
+		/// <summary>
+		/// The exception thrown when the localized key is not found in the localization file.
+		/// </summary>
+		/// <param name="message">Exception message.</param>
+		/// <param name="keyPath">Path of localized key.</param>
+		public LocalizedKeyNotFoundException(string message, string keyPath)
+			: base(message)
+		{
+			KeyPath = keyPath;
+		}
+
+		/// <summary>
+		/// The exception thrown when the localized key is not found in the localization file.
+		/// </summary>
+		/// <param name="message">Exception message.</param>
+		/// <param name="keyPath">Path of localized key.</param>
+		/// <param name="inner">Inner exception.</param>
+		public LocalizedKeyNotFoundException(string message, string keyPath, Exception inner)
+			: base(message, inner)
+		{
+			KeyPath = keyPath;
 		}
 	}
 }
