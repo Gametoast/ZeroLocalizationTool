@@ -550,6 +550,15 @@ namespace ZeroLocalizationTool.Modules
 		}
 
 		/// <summary>
+		/// Gets the value of the key without the two starting unicode characters.
+		/// </summary>
+		/// <returns>Key value.</returns>
+		public string GetValue()
+		{
+			return Value.Substring(2);
+		}
+
+		/// <summary>
 		/// Sets a new value for this Key. Automatically handles setting the binary Values and the Size.
 		/// </summary>
 		/// <param name="str">Readable string to save to the key.</param>

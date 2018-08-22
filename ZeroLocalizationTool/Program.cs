@@ -319,8 +319,7 @@ namespace ZeroLocalizationTool
 			{
 				Key key = db.GetKey(parsedArgs["get-value"][0]);
 
-				Console.WriteLine(string.Format("Value of key at path '{0}': \n{1}", parsedArgs["get-value"][0], key.Value));
-				Exit();
+				Console.WriteLine(string.Format("Value of key at path '{0}': \n\n{1}", parsedArgs["get-value"][0], key.GetValue()));
 			}
 			catch (LocalizedKeyNotFoundException ex)
 			{
