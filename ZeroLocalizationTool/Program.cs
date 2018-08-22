@@ -162,7 +162,7 @@ namespace ZeroLocalizationTool
 					Command_Help();
 					Exit(3);
 				}
-				catch (FileNotFoundException ex)
+				catch (FileNotFoundException)
 				{
 					Console.WriteLine("Error: File not found at path: " + parsedArgs["file"][0]);
 					Exit(3);
