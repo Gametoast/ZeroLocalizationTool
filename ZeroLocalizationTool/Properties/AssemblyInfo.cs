@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SWBF2-Localization-Parser")]
+[assembly: AssemblyTitle("Zero Localization Tool")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SWBF2-Localization-Parser")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Frayed Wires Studios")]
+[assembly: AssemblyProduct("ZeroLocalizationTool")]
+[assembly: AssemblyCopyright("Copyright © Aaron Gilbert 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
