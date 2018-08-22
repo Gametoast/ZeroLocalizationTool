@@ -6,7 +6,7 @@ This is a command-line tool for modifying Star Wars Battlefront II (2005) locali
 
 ### Syntax
 
-The syntax for executing commands (except the Help command) is: 
+The syntax for executing commands (except the Help command) is:  
 `ZeroLocalizationTool <localization file path> <command> [arguments]` 
 
 Furthermore, file paths, key paths, and key values must always be wrapped in quotes.
