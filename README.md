@@ -1,6 +1,17 @@
 # Zero Localization Tool
+ 
+[![Release](https://img.shields.io/github/release/marth8880/ZeroLocalizationTool.svg?label=latest%20release&maxAge=300)](https://github.com/marth8880/ZeroLocalizationTool/releases/latest)
+![Downloads](https://img.shields.io/github/downloads/marth8880/ZeroLocalizationTool/latest/total.svg?maxAge=60)
+[![Issues](https://img.shields.io/github/issues/marth8880/ZeroLocalizationTool.svg?maxAge=60)](https://github.com/marth8880/ZeroLocalizationTool/issues)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg?label=license)](https://opensource.org/licenses/BSD-3-Clause)
 
 This is a command-line tool for modifying Star Wars Battlefront II (2005) localization files. It was designed for use with automated build CLIs like Jenkins but can obviously be used outside of that as well.
+
+## Installation
+
+Download the [latest release](https://github.com/marth8880/ZeroLocalizationTool/releases/latest), extract the archive to any directory, and done! 
+
+Please note that [.NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=17718) is required to run the application.
 
 ## Usage
 
