@@ -511,16 +511,23 @@ namespace ZeroLocalizationTool.Modules
 		public void SetValue(string str)
 		{
 			// TODO: need to figure out how the behaviour of the first two unicode characters and add logic to make sure the Value always starts with the right ones
-			//		It appears that several chars are cut off from the end of the string when these two unicode chars are left out
+			/* NOTES: 
+				 - Closing MLTool, reopening, and modifying the key seems to increment the first digit
+				 - Closing MLTool, reopening, and NOT modifying the key (but still saving) does NOT increment the first digit
+				 - Creating a new, blank key and saving: 0
+				 - Creating a new, blank key, adding a character, and saving: 1
+				 - It appears that several chars are cut off from the end of the string when these two unicode chars are left out
+			*/
+
 			// Set the readable value
-			Value = "\u0001" + "\u0000" + str;
+			Value = str;
 
 			// Calculate and set the new size
-			Size = (Value.Length * 2).ToString();
+			Size = ((Value.Length + 2) * 2).ToString();
 
 			// Convert readable string to binary unicode
 			BinaryValues.Clear();
-			BinaryValues = StringExt.ConvertStringToUnicodeList(Value);
+			BinaryValues = StringExt.ConvertStringToUnicodeList("\u0000" + "\u0000" + Value);
 		}
 	}
 }
