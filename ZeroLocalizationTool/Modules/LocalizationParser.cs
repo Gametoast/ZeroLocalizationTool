@@ -555,7 +555,7 @@ namespace ZeroLocalizationTool.Modules
 		/// <param name="str">Readable string to save to the key.</param>
 		public void SetValue(string str)
 		{
-			// TODO: need to figure out how the behaviour of the first two unicode characters and add logic to make sure the Value always starts with the right ones
+			// TODO: need to figure out the behaviour of the first two unicode characters and add logic to make sure the Value always starts with the right ones
 			/* NOTES: 
 				 - Closing MLTool, reopening, and modifying the key seems to increment the first digit
 				 - Closing MLTool, reopening, and NOT modifying the key (but still saving) does NOT increment the first digit
@@ -565,14 +565,14 @@ namespace ZeroLocalizationTool.Modules
 			*/
 
 			// Set the readable value
-			Value = str;
+			Value = "\u0000" + "\u0000" + str;
 
 			// Calculate and set the new size
-			Size = ((Value.Length + 2) * 2).ToString();
+			Size = (Value.Length * 2).ToString();
 
 			// Convert readable string to binary unicode
 			BinaryValues.Clear();
-			BinaryValues = StringExt.ConvertStringToUnicodeList("\u0000" + "\u0000" + Value);
+			BinaryValues = StringExt.ConvertStringToUnicodeList(Value);
 		}
 	}
 
