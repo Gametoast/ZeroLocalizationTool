@@ -27,6 +27,7 @@ namespace ZeroLocalizationTool
 			// Parse command line arguments
 			try
 			{
+				// Parse first argument, whether it's the file path or the help command
 				if (File.Exists(args[0]))
 				{
 					parsedArgs.Add("file", new string[] { args[0] });
@@ -62,6 +63,7 @@ namespace ZeroLocalizationTool
 					Exit(1);
 				}
 
+				// Parse the rest of the arguments
 				for (int i = 1; i < args.Length; i++)
 				{
 					switch (args[i])
@@ -99,6 +101,7 @@ namespace ZeroLocalizationTool
 			//parsedArgs["file"][0] = @"J:\BF2_ModTools\data_TCW\data_TCW\Common\Localize\english.cfg";
 			//parsedArgs["file"][0] = @"J:\BF2_ModTools\data_LCT\Common\Localize\english.cfg";
 
+			// Begin processing the arguments if the file was specified
 			if (parsedArgs.ContainsKey("file"))
 			{
 				try
@@ -191,10 +194,14 @@ namespace ZeroLocalizationTool
 			{
 				Console.WriteLine("Error: File not specified!\n");
 				Command_Help();
-				Exit(2);
+				Exit(1);
 			}
 		}
 
+		/// <summary>
+		/// Prompts the user to enter any key to quit the application with an exit code.
+		/// </summary>
+		/// <param name="exitCode">Exit code to quit with. 0 = no errors; 1 = argument error; 2 = file not found; 3 = exception error</param>
 		static void Exit(int exitCode = 0)
 		{
 			// Exit the application
@@ -203,6 +210,9 @@ namespace ZeroLocalizationTool
 			Environment.Exit(exitCode);
 		}
 
+		/// <summary>
+		/// Displays the usage info for all commands.
+		/// </summary>
 		static void Command_Help()
 		{
 			Console.WriteLine("For help with a specific command, use 'help <command>', e.g. 'help -sv' \n");
@@ -214,6 +224,10 @@ namespace ZeroLocalizationTool
 			Command_Usage("get-value");
 		}
 
+		/// <summary>
+		/// Displays the usage info for the specified command.
+		/// </summary>
+		/// <param name="cmd">Full command name. Possible values: "help", "set-value", "get-value"</param>
 		static void Command_Usage(string cmd)
 		{
 			switch (cmd)
@@ -221,10 +235,6 @@ namespace ZeroLocalizationTool
 				case "help":
 					Console.WriteLine("-h [command name]             Displays this command list, or the usage for the specified command. Alt: '--help', 'help'");
 					break;
-
-				//case "file":
-				//	Console.WriteLine("-f <file path>                Specifies the localization file to open. Must be wrapped in quotes. Alt: '--file'");
-				//	break;
 
 				case "set-value":
 					Console.WriteLine("-sv <key path> <key value>    Sets a new value for the specified key. Alt: '--set-value'");
@@ -236,6 +246,9 @@ namespace ZeroLocalizationTool
 			}
 		}
 
+		/// <summary>
+		/// Sets a new value for the specified key.
+		/// </summary>
 		static void Command_SetValue()
 		{
 			try
@@ -291,6 +304,9 @@ namespace ZeroLocalizationTool
 			}
 		}
 
+		/// <summary>
+		/// Prints the value of the specified key.
+		/// </summary>
 		static void Command_GetValue()
 		{
 			try
