@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1CCF27B7-67DF-4E18-AB66-19EED080CE32}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SWBF2_Localization_Parser</RootNamespace>
-    <AssemblyName>SWBF2-Localization-Parser</AssemblyName>
+    <RootNamespace>ZeroLocalizationTool</RootNamespace>
+    <AssemblyName>ZeroLocalizationTool</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
