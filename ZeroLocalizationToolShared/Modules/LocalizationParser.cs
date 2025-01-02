@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZeroLocalizationTool;
 
-namespace ZeroLocalizationTool.Modules
+namespace ZeroLocalizationToolShared.Modules
 {
-    public static class LocalizationParser
+	public static class LocalizationParser
 	{
 		enum Chunk
 		{
@@ -487,7 +486,7 @@ namespace ZeroLocalizationTool.Modules
 			}
 
 			#endregion Methods
-			
+
 			// Is this a root-level key?
 			if (splitPath.Length == 1)
 			{
@@ -585,7 +584,7 @@ namespace ZeroLocalizationTool.Modules
 		}
 	}
 
-	public class LocalizedKeyNotFoundException: Exception
+	public class LocalizedKeyNotFoundException : Exception
 	{
 		/// <summary>
 		/// Path of localized key.
