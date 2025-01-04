@@ -516,7 +516,8 @@ namespace ZeroLocalizationToolShared.Modules
 
 			if (!foundKey)
 			{
-				throw new LocalizedKeyNotFoundException(string.Format("Localized key not found in localization file."), keyPath);
+				//throw new LocalizedKeyNotFoundException(string.Format("Localized key not found in localization file."), keyPath);
+				Trace.WriteLine("Localized key not found in localization file.");
 			}
 
 			return keyToFind;
