@@ -24,6 +24,8 @@ namespace ZeroLocalizationToolGUI
 		bool isEnglishSelected = false;
 		TreeNode selectedNode;
 		bool isUpdatingUI = false;
+        bool isEditingNewNode = false;
+        bool isNewNodeScope = false;
 
 		public MainForm()
 		{
@@ -117,9 +119,15 @@ namespace ZeroLocalizationToolGUI
 			// Add the scope
 			TreeNode scopeNode;
 			if (node != null)
-				scopeNode = node.Nodes.Add(scope.Name);
+            {
+                scopeNode = node.Nodes.Add(scope.Name);
+            }
 			else
-				scopeNode = treeView_Database.Nodes.Add(scope.Name);
+            {
+                scopeNode = treeView_Database.Nodes.Add(scope.Name);
+                scopeNode.Tag = scope;
+                scopeNode.ContextMenuStrip = cntxt_Scope;
+            }
 
 			// Add any subscopes
 			if (scope.Scopes.Count > 0)
@@ -134,6 +142,8 @@ namespace ZeroLocalizationToolGUI
 			foreach (Key key in scope.Keys)
 			{
 				TreeNode keyNode = scopeNode.Nodes.Add(key.Name);
+                keyNode.Tag = key;
+                keyNode.ContextMenuStrip = cntxt_Key;
 			}
 		}
 
@@ -309,31 +319,146 @@ namespace ZeroLocalizationToolGUI
         private void treeView_Database_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             string nodePath = e.Node.FullPath;
+            string parentPath = nodePath.Remove(nodePath.LastIndexOf('.'));
+            string editedPath = parentPath + "." + e.Label;
 
-            foreach (string lang in localizationConfigs.Keys)
+            if (isEditingNewNode)
             {
-                Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(nodePath);
-                if (key != null)
+                if (isNewNodeScope)
                 {
-                    key.Rename(e.Label);
+                    Scope scope = commentsConfig.LocalizationDataBase.AddScope(editedPath);
                 }
                 else
                 {
-                    Scope scope = localizationConfigs[lang].LocalizationDataBase.GetScope(nodePath);
-                    scope.Rename(e.Label);
+                    Key key = commentsConfig.LocalizationDataBase.AddKey(editedPath);
                 }
             }
 
-            // Update the comments
-            Key commentKey = commentsConfig.LocalizationDataBase.GetKey(nodePath);
-            if (commentKey != null)
+            foreach (string lang in localizationConfigs.Keys)
             {
-                commentKey.Rename(e.Label);
+                if (isEditingNewNode)
+                {
+                    if (isNewNodeScope)
+                    {
+                        Scope scope = localizationConfigs[lang].LocalizationDataBase.AddScope(editedPath);
+                        if (lang == "english")
+                        {
+                            e.Node.Tag = scope;
+                        }
+                    }
+                    else
+                    {
+                        Key key = localizationConfigs[lang].LocalizationDataBase.AddKey(editedPath);
+                        if (lang == "english")
+                        {
+                            e.Node.Tag = key;
+                        }
+                    }
+                }
+                else
+                {
+                    Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(nodePath);
+                    if (key != null)
+                    {
+                        key.Rename(e.Label);
+                    }
+                    else
+                    {
+                        Scope scope = localizationConfigs[lang].LocalizationDataBase.GetScope(nodePath);
+                        scope.Rename(e.Label);
+                    }
+                }
             }
-            else
+            isEditingNewNode = false;
+        }
+
+        private void cntxt_Key_Delete_Click(object sender, EventArgs e)
+        {
+            Debug.WriteLine("hello");
+        }
+
+        private void cntxt_Key_Rename_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cntxt_Scope_AddKey_Click(object sender, EventArgs e)
+        {
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
             {
-                Scope commentScope = commentsConfig.LocalizationDataBase.GetScope(nodePath);
-                commentScope.Rename(e.Label);
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                if (menuItem.Owner is ContextMenuStrip owner)
+                {
+                    // Get the control that is displaying this context menu
+                    TreeView treeView = owner.SourceControl as TreeView;
+                    TreeNode node = treeView.SelectedNode;
+                    TreeNode newNode = node.Nodes.Add("");
+                    newNode.ContextMenuStrip = cntxt_Key;
+
+                    isEditingNewNode = true;
+                    isNewNodeScope = false;
+                    newNode.BeginEdit();
+                }
+            }
+        }
+
+        private void cntxt_Scope_AddScope_Click(object sender, EventArgs e)
+        {
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                if (menuItem.Owner is ContextMenuStrip owner)
+                {
+                    // Get the control that is displaying this context menu
+                    TreeView treeView = owner.SourceControl as TreeView;
+                    TreeNode node = treeView.SelectedNode;
+                    TreeNode newNode = node.Nodes.Add("");
+                    newNode.ContextMenuStrip = cntxt_Scope;
+
+                    isEditingNewNode = true;
+                    isNewNodeScope = true;
+                    newNode.BeginEdit();
+                }
+            }
+        }
+
+        private void cntxt_Scope_DeleteScope_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cntxt_Scope_RenameScope_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cntxt_RootAddKey_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cntxt_RootAddScope_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            localizationConfigs["english"].LocalizationDataBase.AddScope("somebullshit");
+            localizationConfigs["english"].LocalizationDataBase.AddKey("somebullshit.myNewKey");
+
+            Debug.WriteLine("hello");
+        }
+
+        private void treeView_Database_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                treeView_Database.SelectedNode = e.Node;
             }
         }
     }

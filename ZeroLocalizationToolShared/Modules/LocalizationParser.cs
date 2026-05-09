@@ -607,6 +607,63 @@ namespace ZeroLocalizationToolShared.Modules
 
             return scopeToFind;
         }
+
+		public Key AddKey(string keyPath)
+		{
+			Key newKey = new Key();
+            string[] splitPath = keyPath.Split('.');
+            newKey.SetValue(string.Empty);
+			newKey.Name = splitPath[splitPath.Length - 1];
+
+            // Is this a root level Key?
+            if (splitPath.Length == 1)
+			{
+				Keys.Add(newKey);
+			}
+			else
+			{
+				string parentPath = string.Empty;
+                for (int i = 0; i < splitPath.Length - 1; i++)
+                {
+					parentPath += splitPath[i] + ".";
+                }
+				parentPath = parentPath.TrimEnd('.');
+				Debug.WriteLine(parentPath);
+
+				Scope scope = GetScope(parentPath);
+				scope.Keys.Add(newKey);
+            }
+
+            return newKey;
+        }
+
+        public Scope AddScope(string scopePath)
+        {
+            Scope newScope = new Scope();
+            string[] splitPath = scopePath.Split('.');
+            newScope.Name = splitPath[splitPath.Length - 1];
+
+            // Is this a root level Key?
+            if (splitPath.Length == 1)
+            {
+				Scopes.Add(newScope);
+            }
+            else
+            {
+                string parentPath = string.Empty;
+                for (int i = 0; i < splitPath.Length - 1; i++)
+                {
+                    parentPath += splitPath[i] + ".";
+                }
+                parentPath = parentPath.TrimEnd('.');
+                Debug.WriteLine(parentPath);
+
+                Scope scope = GetScope(parentPath);
+				scope.Scopes.Add(newScope);
+            }
+
+            return newScope;
+        }
     }
 
 	public class Scope
