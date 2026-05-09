@@ -76,7 +76,7 @@ namespace ZeroLocalizationToolGUI
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -116,6 +116,7 @@ namespace ZeroLocalizationToolGUI
             this.treeView_Database.PathSeparator = ".";
             this.treeView_Database.Size = new System.Drawing.Size(295, 613);
             this.treeView_Database.TabIndex = 2;
+            this.treeView_Database.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_Database_AfterLabelEdit);
             this.treeView_Database.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Database_AfterSelect);
             // 
             // cmb_CurLanguage

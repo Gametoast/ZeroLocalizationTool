@@ -305,5 +305,36 @@ namespace ZeroLocalizationToolGUI
 				localizationConfigs[lang].LocalizationDataBase.WriteToFile(localizationConfigs[lang].FilePath);
 			}
         }
+
+        private void treeView_Database_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            string nodePath = e.Node.FullPath;
+
+            foreach (string lang in localizationConfigs.Keys)
+            {
+                Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(nodePath);
+                if (key != null)
+                {
+                    key.Rename(e.Label);
+                }
+                else
+                {
+                    Scope scope = localizationConfigs[lang].LocalizationDataBase.GetScope(nodePath);
+                    scope.Rename(e.Label);
+                }
+            }
+
+            // Update the comments
+            Key commentKey = commentsConfig.LocalizationDataBase.GetKey(nodePath);
+            if (commentKey != null)
+            {
+                commentKey.Rename(e.Label);
+            }
+            else
+            {
+                Scope commentScope = commentsConfig.LocalizationDataBase.GetScope(nodePath);
+                commentScope.Rename(e.Label);
+            }
+        }
     }
 }

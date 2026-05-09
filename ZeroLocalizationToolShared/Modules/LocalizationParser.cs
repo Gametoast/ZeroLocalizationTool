@@ -521,8 +521,93 @@ namespace ZeroLocalizationToolShared.Modules
 			}
 
 			return keyToFind;
-		}
-	}
+        }
+
+        public Scope GetScope(string scopePath)
+        {
+            Scope scopeToFind = null;
+            string[] splitPath = scopePath.Split('.');
+            int level = 0;
+            bool foundScope = false;
+
+            #region Methods
+
+            /// <summary>
+            /// Checks if the given Scope matches the Scope name at the current level's path element. If not found, looks in any child Scopes.
+            /// </summary>
+            void GetInnerScope(Scope scope)
+            {
+                // Does this Scope match the current level's path element?
+                if (scope.Name == splitPath[level])
+                {
+                    level++;
+
+                    // Are we at the final path element, aka the Key?
+                    if (level == splitPath.Length - 1)
+                    {
+                        // Try to find the Scopes matching the final path element
+                        foreach (Scope innerScope in scope.Scopes)
+                        {
+                            if (innerScope.Name == splitPath[level])
+                            {
+                                scopeToFind = innerScope;
+                                foundScope = true;
+                                break;
+                            }
+                        }
+                    }
+                    // Are there still more Scope levels?
+                    else if (level < splitPath.Length)
+                    {
+                        // Recursively go through any child Scopes
+                        foreach (Scope childScope in scope.Scopes)
+                        {
+                            GetInnerScope(childScope);
+
+                            if (foundScope) break;
+                        }
+                    }
+                }
+            }
+
+            #endregion Methods
+
+            // Is this a root-level scope?
+            if (splitPath.Length == 1)
+            {
+                foreach (Scope scope in Scopes)
+                {
+                    if (scope.Name == splitPath[0])
+                    {
+                        scopeToFind = scope;
+                        foundScope = true;
+                    }
+                }
+            }
+
+            if (!foundScope)
+            {
+                // Start looking through the Scopes
+                if (splitPath.Length > 1)
+                {
+                    foreach (Scope scope in Scopes)
+                    {
+                        GetInnerScope(scope);
+
+                        if (foundScope) break;
+                    }
+                }
+            }
+
+            if (!foundScope)
+            {
+                //throw new LocalizedKeyNotFoundException(string.Format("Localized key not found in localization file."), keyPath);
+                Trace.WriteLine("Scope not found in localization file.");
+            }
+
+            return scopeToFind;
+        }
+    }
 
 	public class Scope
 	{
@@ -534,6 +619,11 @@ namespace ZeroLocalizationToolShared.Modules
 		{
 			Scopes = new List<Scope>();
 			Keys = new List<Key>();
+		}
+
+		public void Rename(string name)
+		{
+			Name = name;
 		}
 	}
 
@@ -582,6 +672,11 @@ namespace ZeroLocalizationToolShared.Modules
 			// Convert readable string to binary unicode
 			BinaryValues.Clear();
 			BinaryValues = StringExt.ConvertStringToUnicodeList(Value);
+		}
+
+		public void Rename(string name)
+		{
+			Name = name;
 		}
 	}
 
