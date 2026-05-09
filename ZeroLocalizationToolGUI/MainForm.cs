@@ -17,6 +17,7 @@ namespace ZeroLocalizationToolGUI
 	{
 		public CommonOpenFileDialog openDlg_AddProjectPrompt = new CommonOpenFileDialog();
 		public DataBase db = new DataBase();
+		TreeNode selectedNode;
 
 		public MainForm()
 		{
@@ -39,25 +40,27 @@ namespace ZeroLocalizationToolGUI
 
 		}
 
-		private void treeView_Database_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-		{
-			string keyPath = e.Node.FullPath;
-			Key key = db.GetKey(keyPath);
+        private void treeView_Database_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            selectedNode = e.Node;
 
-			if (key != null)
-			{
-				rtb_KeyValue.Enabled = true;
-				lbl_NodePath.Text = keyPath;
-				rtb_KeyValue.Text = key.GetValue();
-			}
-			else
-			{
-				rtb_KeyValue.Text = string.Empty;
-				rtb_KeyValue.Enabled = false;
-			}
-		}
+            string keyPath = e.Node.FullPath;
+            Key key = db.GetKey(keyPath);
 
-		void LoadDatabase(string fileName)
+            if (key != null)
+            {
+                rtb_KeyValue.Enabled = true;
+                lbl_NodePath.Text = keyPath;
+                rtb_KeyValue.Text = key.GetValue();
+            }
+            else
+            {
+                rtb_KeyValue.Text = string.Empty;
+                rtb_KeyValue.Enabled = false;
+            }
+        }
+
+        void LoadDatabase(string fileName)
 		{
 			db = LocalizationParser.ParseDataBase(fileName);
 
@@ -127,5 +130,5 @@ namespace ZeroLocalizationToolGUI
 				lastNode = null; // This is the place code was changed
 			}
 		}
-	}
+    }
 }
