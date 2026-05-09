@@ -104,6 +104,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_OriginalText.Size = new System.Drawing.Size(446, 258);
             this.rtb_OriginalText.TabIndex = 4;
             this.rtb_OriginalText.Text = "";
+            this.rtb_OriginalText.TextChanged += new System.EventHandler(this.rtb_OriginalText_TextChanged);
             // 
             // treeView_Database
             // 
@@ -137,6 +138,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_TranslatedText.TabIndex = 6;
             this.rtb_TranslatedText.Text = "";
             this.rtb_TranslatedText.Visible = false;
+            this.rtb_TranslatedText.TextChanged += new System.EventHandler(this.rtb_TranslatedText_TextChanged);
             // 
             // rtb_Comments
             // 
@@ -147,6 +149,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_Comments.Size = new System.Drawing.Size(446, 258);
             this.rtb_Comments.TabIndex = 7;
             this.rtb_Comments.Text = "";
+            this.rtb_Comments.TextChanged += new System.EventHandler(this.rtb_Comments_TextChanged);
             // 
             // label1
             // 

@@ -122,37 +122,6 @@ namespace ZeroLocalizationToolGUI
 			}
 		}
 
-		/// <summary>
-		/// Populates a TreeView based on a list of file paths.
-		/// 
-		/// Adapted from https://stackoverflow.com/a/19332770/3639133
-		/// </summary>
-		/// <param name="treeView">TreeView control to populate.</param>
-		/// <param name="paths">List of paths.</param>
-		/// <param name="pathSeparator">Character to split the path.</param>
-		private void PopulateTreeView(TreeView treeView, List<string> paths, char pathSeparator)
-		{
-			TreeNode lastNode = null;
-			string subPathAgg;
-			foreach (string path in paths)
-			{
-				subPathAgg = string.Empty;
-				foreach (string subPath in path.Split(pathSeparator))
-				{
-					subPathAgg += subPath + pathSeparator;
-					TreeNode[] nodes = treeView.Nodes.Find(subPathAgg, true);
-					if (nodes.Length == 0)
-						if (lastNode == null)
-							lastNode = treeView.Nodes.Add(subPathAgg, subPath);
-						else
-							lastNode = lastNode.Nodes.Add(subPathAgg, subPath);
-					else
-						lastNode = nodes[0];
-				}
-				lastNode = null; // This is the place code was changed
-			}
-		}
-
 		void UpdateKeyValueViews(string keyPath)
         {
             string curLang = GetCurrentLanguage();
@@ -186,7 +155,7 @@ namespace ZeroLocalizationToolGUI
 				rtb_TranslatedText.Text = string.Empty;
 			}
 
-			// Update UI controls
+			// Update UI controls usability/visibility
 			if (isScopeSelected)
             {
 				lbl_NodePath.Text = string.Empty;
@@ -222,8 +191,26 @@ namespace ZeroLocalizationToolGUI
 			if (selectedNode != null)
 			{
 				string keyPath = selectedNode.FullPath;
-				Key key = db.GetKey(keyPath);	// TODO: this should enumerate through a db dictionary mapped to the different languages
-				key.SetValue(rtb_OriginalText.Text);
+
+				// Comment text
+				Key commentKey = commentsDb.GetKey(keyPath);
+				commentKey.SetValue(rtb_Comments.Text);
+
+				// Translations text
+				foreach (string lang in databases.Keys)
+                {
+					Key key = databases[lang].GetKey(keyPath);
+					string valueSource;
+					if (lang == "english")
+                    {
+						valueSource = rtb_OriginalText.Text;
+                    }
+					else
+					{
+						valueSource = rtb_TranslatedText.Text;
+					}
+                    key.SetValue(valueSource);
+                }
 			}
 		}
 
@@ -253,5 +240,20 @@ namespace ZeroLocalizationToolGUI
 		{
 			return cmb_CurLanguage.Text;
 		}
+
+        private void rtb_OriginalText_TextChanged(object sender, EventArgs e)
+        {
+			SetKeyValueFromSelectedNode();
+        }
+
+        private void rtb_TranslatedText_TextChanged(object sender, EventArgs e)
+        {
+			SetKeyValueFromSelectedNode();
+        }
+
+        private void rtb_Comments_TextChanged(object sender, EventArgs e)
+        {
+			SetKeyValueFromSelectedNode();
+        }
     }
 }
