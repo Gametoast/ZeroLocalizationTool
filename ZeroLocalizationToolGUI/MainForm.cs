@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using ZeroLocalizationToolGUI.Modules;
 using ZeroLocalizationToolShared.Modules;
 
 namespace ZeroLocalizationToolGUI
@@ -17,15 +18,23 @@ namespace ZeroLocalizationToolGUI
 	public partial class MainForm : Form
 	{
 		public CommonOpenFileDialog openDlg_AddProjectPrompt = new CommonOpenFileDialog();
-		public DataBase db = new DataBase();
-		public DataBase commentsDb = new DataBase();
-		public Dictionary<string, DataBase> databases = new Dictionary<string, DataBase>();
+		public LocalizationConfig commentsConfig;
+		public Dictionary<string, LocalizationConfig> localizationConfigs = new Dictionary<string, LocalizationConfig>();
+
 		bool isEnglishSelected = false;
 		TreeNode selectedNode;
+		bool isUpdatingUI = false;
 
 		public MainForm()
 		{
 			InitializeComponent();
+		}
+
+		enum ELocalizationTextFieldType
+		{
+			Comment,
+			Original,
+			Translation
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -47,18 +56,24 @@ namespace ZeroLocalizationToolGUI
 
 					if (languageName == "comments")
 					{
-						commentsDb = LocalizationParser.ParseDataBase(cfgFile);
+						commentsConfig = new LocalizationConfig();
+						commentsConfig.FilePath = cfgFile;
+						commentsConfig.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
+						Debug.WriteLine(commentsConfig.LocalizationDataBase.GetKey("cheats.ammo_off"));
                     }
 					else
 					{
-						DataBase langDb = LocalizationParser.ParseDataBase(cfgFile);
-                        databases.Add(languageName, langDb);
+						LocalizationConfig config = new LocalizationConfig();
+						config.FilePath = cfgFile;
+						config.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
+						localizationConfigs.Add(languageName, config);
+
 						cmb_CurLanguage.Items.Add(languageName);
 
 						if (languageName == "english")
 						{
 							englishFound = true;
-							PopulateTreeViewFromDatabase(langDb);
+							PopulateTreeViewFromDatabase(config.LocalizationDataBase);
 						}
 					}
                 }
@@ -124,92 +139,108 @@ namespace ZeroLocalizationToolGUI
 
 		void UpdateKeyValueViews(string keyPath)
         {
-            string curLang = GetCurrentLanguage();
-			bool isScopeSelected = false;
+			isUpdatingUI = true;
 
-            Key originalKey = databases["english"].GetKey(keyPath);
+			try
+			{
+                string curLang = GetCurrentLanguage();
+                bool isScopeSelected = false;
 
-			// Is this a key?
-            if (originalKey != null)
-            {
-                lbl_NodePath.Text = keyPath;
-				cmb_CurLanguage.Enabled = true;
-                rtb_OriginalText.Text = originalKey.GetValue();
+                Key originalKey = localizationConfigs["english"].LocalizationDataBase.GetKey(keyPath);
 
-				if (!isEnglishSelected)
+                // Is this a key?
+                if (originalKey != null)
                 {
-                    Key translatedKey = databases[curLang].GetKey(keyPath);
-					rtb_TranslatedText.Text = translatedKey.GetValue();
+                    lbl_NodePath.Text = keyPath;
+                    cmb_CurLanguage.Enabled = true;
+                    rtb_OriginalText.Text = originalKey.GetValue();
+
+                    if (!isEnglishSelected)
+                    {
+                        Key translatedKey = localizationConfigs[curLang].LocalizationDataBase.GetKey(keyPath);
+                        rtb_TranslatedText.Text = translatedKey.GetValue();
+                    }
+
+                    Key commentKey = commentsConfig.LocalizationDataBase.GetKey(keyPath);
+                    rtb_Comments.Text = commentKey.GetValue();
+                }
+                // Or is it a scope?
+                else
+                {
+                    isScopeSelected = true;
+
+                    rtb_Comments.Text = string.Empty;
+                    rtb_OriginalText.Text = string.Empty;
+                    rtb_TranslatedText.Text = string.Empty;
                 }
 
-				Key commentKey = commentsDb.GetKey(keyPath);
-				rtb_Comments.Text = commentKey.GetValue();
+                // Update UI controls usability/visibility
+                if (isScopeSelected)
+                {
+                    lbl_NodePath.Text = string.Empty;
+                    rtb_Comments.Enabled = false;
+                    rtb_OriginalText.Enabled = false;
+                    rtb_TranslatedText.Visible = false;
+                    rtb_TranslatedText.Enabled = false;
+                }
+                else
+                {
+                    if (curLang == string.Empty)
+                    {
+                        rtb_Comments.Enabled = false;
+                        rtb_OriginalText.Enabled = false;
+                        rtb_TranslatedText.Visible = false;
+                        rtb_TranslatedText.Enabled = false;
+                    }
+                    else if (curLang == "english")
+                    {
+                        rtb_Comments.Enabled = true;
+                        rtb_OriginalText.Enabled = true;
+                        rtb_TranslatedText.Visible = false;
+                        rtb_TranslatedText.Enabled = false;
+                    }
+                    else if (curLang != "english")
+                    {
+                        rtb_Comments.Enabled = true;
+                        rtb_OriginalText.Enabled = false;
+                        rtb_TranslatedText.Visible = true;
+                        rtb_TranslatedText.Enabled = true;
+                    }
+                }
             }
-			// Or is it a scope?
-			else
-            {
-				isScopeSelected = true;
-
-                rtb_Comments.Text = string.Empty;
-				rtb_OriginalText.Text = string.Empty;
-				rtb_TranslatedText.Text = string.Empty;
+			finally
+			{
+				isUpdatingUI = false;
 			}
-
-			// Update UI controls usability/visibility
-			if (isScopeSelected)
-            {
-				lbl_NodePath.Text = string.Empty;
-                rtb_OriginalText.Enabled = false;
-                rtb_TranslatedText.Visible = false;
-                rtb_TranslatedText.Enabled = false;
-            }
-			else
-            {
-                if (curLang == string.Empty)
-                {
-                    rtb_OriginalText.Enabled = false;
-                    rtb_TranslatedText.Visible = false;
-                    rtb_TranslatedText.Enabled = false;
-                }
-                else if (curLang == "english")
-                {
-                    rtb_OriginalText.Enabled = true;
-                    rtb_TranslatedText.Visible = false;
-                    rtb_TranslatedText.Enabled = false;
-                }
-                else if (curLang != "english")
-                {
-                    rtb_OriginalText.Enabled = false;
-                    rtb_TranslatedText.Visible = true;
-                    rtb_TranslatedText.Enabled = true;
-                }
-            }
+            
         }
 
-		void SetKeyValueFromSelectedNode()
+		void SetKeyValueFromSelectedNode(ELocalizationTextFieldType fieldType)
 		{
 			if (selectedNode != null)
 			{
 				string keyPath = selectedNode.FullPath;
 
 				// Comment text
-				Key commentKey = commentsDb.GetKey(keyPath);
-				commentKey.SetValue(rtb_Comments.Text);
-
-				// Translations text
-				foreach (string lang in databases.Keys)
+				if (fieldType == ELocalizationTextFieldType.Comment)
                 {
-					Key key = databases[lang].GetKey(keyPath);
-					string valueSource;
-					if (lang == "english")
+                    Key commentKey = commentsConfig.LocalizationDataBase.GetKey(keyPath);
+                    commentKey.SetValue(rtb_Comments.Text);
+                }
+				else
+                {
+                    // Translations text
+                    string lang = GetCurrentLanguage();
+                    Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(keyPath);
+
+                    if (lang == "english" && fieldType == ELocalizationTextFieldType.Original)
                     {
-						valueSource = rtb_OriginalText.Text;
+                        key.SetValue(rtb_OriginalText.Text);
                     }
-					else
-					{
-						valueSource = rtb_TranslatedText.Text;
-					}
-                    key.SetValue(valueSource);
+                    else if (fieldType == ELocalizationTextFieldType.Translation)
+                    {
+                        key.SetValue(rtb_TranslatedText.Text);
+                    }
                 }
 			}
 		}
@@ -243,17 +274,36 @@ namespace ZeroLocalizationToolGUI
 
         private void rtb_OriginalText_TextChanged(object sender, EventArgs e)
         {
-			SetKeyValueFromSelectedNode();
+			if (isUpdatingUI)
+				return;
+
+			SetKeyValueFromSelectedNode(ELocalizationTextFieldType.Original);
         }
 
         private void rtb_TranslatedText_TextChanged(object sender, EventArgs e)
         {
-			SetKeyValueFromSelectedNode();
+            if (isUpdatingUI)
+                return;
+
+            SetKeyValueFromSelectedNode(ELocalizationTextFieldType.Translation);
         }
 
         private void rtb_Comments_TextChanged(object sender, EventArgs e)
         {
-			SetKeyValueFromSelectedNode();
+            if (isUpdatingUI)
+                return;
+
+            SetKeyValueFromSelectedNode(ELocalizationTextFieldType.Comment);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			commentsConfig.LocalizationDataBase.WriteToFile(commentsConfig.FilePath);
+
+			foreach (string lang in localizationConfigs.Keys)
+			{
+				localizationConfigs[lang].LocalizationDataBase.WriteToFile(localizationConfigs[lang].FilePath);
+			}
         }
     }
 }
