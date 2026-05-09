@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,9 @@ namespace ZeroLocalizationToolGUI
 	{
 		public CommonOpenFileDialog openDlg_AddProjectPrompt = new CommonOpenFileDialog();
 		public DataBase db = new DataBase();
+		public DataBase commentsDb = new DataBase();
+		public Dictionary<string, DataBase> databases = new Dictionary<string, DataBase>();
+		bool isEnglishSelected = false;
 		TreeNode selectedNode;
 
 		public MainForm()
@@ -26,12 +30,44 @@ namespace ZeroLocalizationToolGUI
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			openDlg_AddProjectPrompt.Title = "Open Localization File";
-			//openDlg_AddProjectPrompt.IsFolderPicker = true;
+			lbl_NodePath.Text = string.Empty;
+
+			openDlg_AddProjectPrompt.Title = "Open Localization Folder";
+			openDlg_AddProjectPrompt.IsFolderPicker = true;
+
+			bool englishFound = false;
 
 			if (openDlg_AddProjectPrompt.ShowDialog() == CommonFileDialogResult.Ok)
 			{
-				LoadDatabase(openDlg_AddProjectPrompt.FileName);
+				string[] cfgFiles = Directory.GetFiles(openDlg_AddProjectPrompt.FileName, "*.cfg");
+
+				foreach (string cfgFile in cfgFiles)
+                {
+                    string languageName = Path.GetFileNameWithoutExtension(cfgFile).ToLower();
+
+					if (languageName == "comments")
+					{
+						commentsDb = LocalizationParser.ParseDataBase(cfgFile);
+                    }
+					else
+					{
+						DataBase langDb = LocalizationParser.ParseDataBase(cfgFile);
+                        databases.Add(languageName, langDb);
+						cmb_CurLanguage.Items.Add(languageName);
+
+						if (languageName == "english")
+						{
+							englishFound = true;
+							PopulateTreeViewFromDatabase(langDb);
+						}
+					}
+                }
+				cmb_CurLanguage.SelectedIndex = 0;
+
+				if (!englishFound)
+				{
+					MessageBox.Show("English.cfg is required but was not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
 			}
 		}
 
@@ -45,26 +81,12 @@ namespace ZeroLocalizationToolGUI
             selectedNode = e.Node;
 
             string keyPath = e.Node.FullPath;
-            Key key = db.GetKey(keyPath);
-
-            if (key != null)
-            {
-                rtb_KeyValue.Enabled = true;
-                lbl_NodePath.Text = keyPath;
-                rtb_KeyValue.Text = key.GetValue();
-            }
-            else
-            {
-                rtb_KeyValue.Text = string.Empty;
-                rtb_KeyValue.Enabled = false;
-            }
+			UpdateKeyValueViews(keyPath);
         }
 
-        void LoadDatabase(string fileName)
+        void PopulateTreeViewFromDatabase(DataBase dataBase)
 		{
-			db = LocalizationParser.ParseDataBase(fileName);
-
-			foreach (Scope rootScope in db.Scopes)
+			foreach (Scope rootScope in dataBase.Scopes)
 			{
 				AddDatabaseNodesForScope(rootScope);
 			}
@@ -129,6 +151,107 @@ namespace ZeroLocalizationToolGUI
 				}
 				lastNode = null; // This is the place code was changed
 			}
+		}
+
+		void UpdateKeyValueViews(string keyPath)
+        {
+            string curLang = GetCurrentLanguage();
+			bool isScopeSelected = false;
+
+            Key originalKey = databases["english"].GetKey(keyPath);
+
+			// Is this a key?
+            if (originalKey != null)
+            {
+                lbl_NodePath.Text = keyPath;
+				cmb_CurLanguage.Enabled = true;
+                rtb_OriginalText.Text = originalKey.GetValue();
+
+				if (!isEnglishSelected)
+                {
+                    Key translatedKey = databases[curLang].GetKey(keyPath);
+					rtb_TranslatedText.Text = translatedKey.GetValue();
+                }
+
+				Key commentKey = commentsDb.GetKey(keyPath);
+				rtb_Comments.Text = commentKey.GetValue();
+            }
+			// Or is it a scope?
+			else
+            {
+				isScopeSelected = true;
+
+                rtb_Comments.Text = string.Empty;
+				rtb_OriginalText.Text = string.Empty;
+				rtb_TranslatedText.Text = string.Empty;
+			}
+
+			// Update UI controls
+			if (isScopeSelected)
+            {
+				lbl_NodePath.Text = string.Empty;
+                rtb_OriginalText.Enabled = false;
+                rtb_TranslatedText.Visible = false;
+                rtb_TranslatedText.Enabled = false;
+            }
+			else
+            {
+                if (curLang == string.Empty)
+                {
+                    rtb_OriginalText.Enabled = false;
+                    rtb_TranslatedText.Visible = false;
+                    rtb_TranslatedText.Enabled = false;
+                }
+                else if (curLang == "english")
+                {
+                    rtb_OriginalText.Enabled = true;
+                    rtb_TranslatedText.Visible = false;
+                    rtb_TranslatedText.Enabled = false;
+                }
+                else if (curLang != "english")
+                {
+                    rtb_OriginalText.Enabled = false;
+                    rtb_TranslatedText.Visible = true;
+                    rtb_TranslatedText.Enabled = true;
+                }
+            }
+        }
+
+		void SetKeyValueFromSelectedNode()
+		{
+			if (selectedNode != null)
+			{
+				string keyPath = selectedNode.FullPath;
+				Key key = db.GetKey(keyPath);	// TODO: this should enumerate through a db dictionary mapped to the different languages
+				key.SetValue(rtb_OriginalText.Text);
+			}
+		}
+
+        private void cmb_CurLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+			string curLang = GetCurrentLanguage();
+            if (curLang == string.Empty)
+            {
+                isEnglishSelected = false;
+            }
+            else if (curLang == "english")
+            {
+                isEnglishSelected = true;
+            }
+            else if (curLang != "english")
+            {
+                isEnglishSelected = false;
+            }
+
+            if (selectedNode != null)
+			{
+                UpdateKeyValueViews(selectedNode.FullPath);
+            }
+        }
+
+		string GetCurrentLanguage()
+		{
+			return cmb_CurLanguage.Text;
 		}
     }
 }

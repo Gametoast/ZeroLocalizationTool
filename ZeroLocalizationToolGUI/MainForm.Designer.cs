@@ -35,8 +35,12 @@ namespace ZeroLocalizationToolGUI
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbl_NodePath = new System.Windows.Forms.Label();
-            this.rtb_KeyValue = new System.Windows.Forms.RichTextBox();
+            this.rtb_OriginalText = new System.Windows.Forms.RichTextBox();
             this.treeView_Database = new System.Windows.Forms.TreeView();
+            this.cmb_CurLanguage = new System.Windows.Forms.ComboBox();
+            this.rtb_TranslatedText = new System.Windows.Forms.RichTextBox();
+            this.rtb_Comments = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,7 +52,7 @@ namespace ZeroLocalizationToolGUI
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(1036, 26);
+            this.menuStrip1.Size = new System.Drawing.Size(1228, 30);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -91,15 +95,15 @@ namespace ZeroLocalizationToolGUI
             this.lbl_NodePath.TabIndex = 3;
             this.lbl_NodePath.Text = "label1";
             // 
-            // rtb_KeyValue
+            // rtb_OriginalText
             // 
-            this.rtb_KeyValue.Enabled = false;
-            this.rtb_KeyValue.Location = new System.Drawing.Point(316, 55);
-            this.rtb_KeyValue.Margin = new System.Windows.Forms.Padding(4);
-            this.rtb_KeyValue.Name = "rtb_KeyValue";
-            this.rtb_KeyValue.Size = new System.Drawing.Size(703, 258);
-            this.rtb_KeyValue.TabIndex = 4;
-            this.rtb_KeyValue.Text = "";
+            this.rtb_OriginalText.Enabled = false;
+            this.rtb_OriginalText.Location = new System.Drawing.Point(316, 55);
+            this.rtb_OriginalText.Margin = new System.Windows.Forms.Padding(4);
+            this.rtb_OriginalText.Name = "rtb_OriginalText";
+            this.rtb_OriginalText.Size = new System.Drawing.Size(446, 258);
+            this.rtb_OriginalText.TabIndex = 4;
+            this.rtb_OriginalText.Text = "";
             // 
             // treeView_Database
             // 
@@ -112,12 +116,57 @@ namespace ZeroLocalizationToolGUI
             this.treeView_Database.TabIndex = 2;
             this.treeView_Database.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Database_AfterSelect);
             // 
+            // cmb_CurLanguage
+            // 
+            this.cmb_CurLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_CurLanguage.FormattingEnabled = true;
+            this.cmb_CurLanguage.Location = new System.Drawing.Point(319, 321);
+            this.cmb_CurLanguage.MaxDropDownItems = 99;
+            this.cmb_CurLanguage.Name = "cmb_CurLanguage";
+            this.cmb_CurLanguage.Size = new System.Drawing.Size(242, 24);
+            this.cmb_CurLanguage.TabIndex = 5;
+            this.cmb_CurLanguage.SelectedIndexChanged += new System.EventHandler(this.cmb_CurLanguage_SelectedIndexChanged);
+            // 
+            // rtb_TranslatedText
+            // 
+            this.rtb_TranslatedText.Enabled = false;
+            this.rtb_TranslatedText.Location = new System.Drawing.Point(316, 352);
+            this.rtb_TranslatedText.Margin = new System.Windows.Forms.Padding(4);
+            this.rtb_TranslatedText.Name = "rtb_TranslatedText";
+            this.rtb_TranslatedText.Size = new System.Drawing.Size(446, 258);
+            this.rtb_TranslatedText.TabIndex = 6;
+            this.rtb_TranslatedText.Text = "";
+            this.rtb_TranslatedText.Visible = false;
+            // 
+            // rtb_Comments
+            // 
+            this.rtb_Comments.Enabled = false;
+            this.rtb_Comments.Location = new System.Drawing.Point(770, 55);
+            this.rtb_Comments.Margin = new System.Windows.Forms.Padding(4);
+            this.rtb_Comments.Name = "rtb_Comments";
+            this.rtb_Comments.Size = new System.Drawing.Size(446, 258);
+            this.rtb_Comments.TabIndex = 7;
+            this.rtb_Comments.Text = "";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(770, 34);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(74, 16);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Comments:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1036, 652);
-            this.Controls.Add(this.rtb_KeyValue);
+            this.ClientSize = new System.Drawing.Size(1228, 652);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.rtb_Comments);
+            this.Controls.Add(this.rtb_TranslatedText);
+            this.Controls.Add(this.cmb_CurLanguage);
+            this.Controls.Add(this.rtb_OriginalText);
             this.Controls.Add(this.lbl_NodePath);
             this.Controls.Add(this.treeView_Database);
             this.Controls.Add(this.menuStrip1);
@@ -141,7 +190,11 @@ namespace ZeroLocalizationToolGUI
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.TreeView treeView_Database;
 		private System.Windows.Forms.Label lbl_NodePath;
-		private System.Windows.Forms.RichTextBox rtb_KeyValue;
-	}
+		private System.Windows.Forms.RichTextBox rtb_OriginalText;
+        private System.Windows.Forms.ComboBox cmb_CurLanguage;
+        private System.Windows.Forms.RichTextBox rtb_TranslatedText;
+        private System.Windows.Forms.RichTextBox rtb_Comments;
+        private System.Windows.Forms.Label label1;
+    }
 }
 
