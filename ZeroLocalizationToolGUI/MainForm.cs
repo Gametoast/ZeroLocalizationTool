@@ -423,13 +423,14 @@ namespace ZeroLocalizationToolGUI
                 return;
             }
 
-            string pattern = @"^[A-Za-z0-9_-]+$";
+            // Start and end with and allow alphanumeric, dashes, underscores
+            string pattern = @"^[A-Za-z0-9](?:[A-Za-z0-9_-]*[A-Za-z0-9])?$";
             bool isValid = Regex.IsMatch(label, pattern);
 
             if (!isValid)
             {
                 e.CancelEdit = true;
-                MessageBox.Show("Invalid name. Key/Scope names can only include alphanumerical, dash, or underscore characters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid name. Key/Scope names must start and end with an alphanumeric and can only include alphanumerical, dash, or underscore characters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Node.BeginEdit();
                 return;
             }
