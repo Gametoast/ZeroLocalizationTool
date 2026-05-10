@@ -403,7 +403,7 @@ namespace ZeroLocalizationToolGUI
             UpdateKeyValueViews(nodePath);
         }
 
-        private void cntxt_Key_Delete_Click(object sender, EventArgs e)
+        private void cntxt_Node_Delete_Click(object sender, EventArgs e)
         {
             // Try to cast the sender to a ToolStripItem
             ToolStripItem menuItem = sender as ToolStripItem;
@@ -421,9 +421,22 @@ namespace ZeroLocalizationToolGUI
             }
         }
 
-        private void cntxt_Key_Rename_Click(object sender, EventArgs e)
+        private void cntxt_Node_Rename_Click(object sender, EventArgs e)
         {
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                if (menuItem.Owner is ContextMenuStrip owner)
+                {
+                    // Get the control that is displaying this context menu
+                    TreeView treeView = owner.SourceControl as TreeView;
+                    TreeNode node = treeView.SelectedNode;
 
+                    Command_RenameNode(node);
+                }
+            }
         }
 
         private void cntxt_Scope_AddKey_Click(object sender, EventArgs e)
@@ -460,29 +473,6 @@ namespace ZeroLocalizationToolGUI
                     Command_AddNode(node, true);
                 }
             }
-        }
-
-        private void cntxt_Scope_DeleteScope_Click(object sender, EventArgs e)
-        {
-            // Try to cast the sender to a ToolStripItem
-            ToolStripItem menuItem = sender as ToolStripItem;
-            if (menuItem != null)
-            {
-                // Retrieve the ContextMenuStrip that owns this ToolStripItem
-                if (menuItem.Owner is ContextMenuStrip owner)
-                {
-                    // Get the control that is displaying this context menu
-                    TreeView treeView = owner.SourceControl as TreeView;
-                    TreeNode node = treeView.SelectedNode;
-
-                    Command_DeleteNode(node);
-                }
-            }
-        }
-
-        private void cntxt_Scope_RenameScope_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void cntxt_RootAddKey_Click(object sender, EventArgs e)
@@ -555,6 +545,12 @@ namespace ZeroLocalizationToolGUI
             }
 
             node.Remove();
+        }
+
+        void Command_RenameNode(TreeNode node)
+        {
+            isEditingNodeScope = node.Tag is Scope;
+            node.BeginEdit();
         }
 
         private void button1_Click(object sender, EventArgs e)

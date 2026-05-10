@@ -213,19 +213,19 @@ namespace ZeroLocalizationToolGUI
             this.cntxt_Scope_DeleteScope,
             this.cntxt_Scope_RenameScope});
             this.cntxt_Scope.Name = "cntxt_Scope";
-            this.cntxt_Scope.Size = new System.Drawing.Size(178, 100);
+            this.cntxt_Scope.Size = new System.Drawing.Size(211, 128);
             // 
             // cntxt_Scope_AddKey
             // 
             this.cntxt_Scope_AddKey.Name = "cntxt_Scope_AddKey";
-            this.cntxt_Scope_AddKey.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Scope_AddKey.Size = new System.Drawing.Size(177, 24);
             this.cntxt_Scope_AddKey.Text = "Add Key";
             this.cntxt_Scope_AddKey.Click += new System.EventHandler(this.cntxt_Scope_AddKey_Click);
             // 
             // cntxt_Scope_AddScope
             // 
             this.cntxt_Scope_AddScope.Name = "cntxt_Scope_AddScope";
-            this.cntxt_Scope_AddScope.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Scope_AddScope.Size = new System.Drawing.Size(177, 24);
             this.cntxt_Scope_AddScope.Text = "Add Scope";
             this.cntxt_Scope_AddScope.Click += new System.EventHandler(this.cntxt_Scope_AddScope_Click);
             // 
@@ -234,14 +234,14 @@ namespace ZeroLocalizationToolGUI
             this.cntxt_Scope_DeleteScope.Name = "cntxt_Scope_DeleteScope";
             this.cntxt_Scope_DeleteScope.Size = new System.Drawing.Size(210, 24);
             this.cntxt_Scope_DeleteScope.Text = "Delete Scope";
-            this.cntxt_Scope_DeleteScope.Click += new System.EventHandler(this.cntxt_Scope_DeleteScope_Click);
+            this.cntxt_Scope_DeleteScope.Click += new System.EventHandler(this.cntxt_Node_Delete_Click);
             // 
             // cntxt_Scope_RenameScope
             // 
             this.cntxt_Scope_RenameScope.Name = "cntxt_Scope_RenameScope";
-            this.cntxt_Scope_RenameScope.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Scope_RenameScope.Size = new System.Drawing.Size(177, 24);
             this.cntxt_Scope_RenameScope.Text = "Rename Scope";
-            this.cntxt_Scope_RenameScope.Click += new System.EventHandler(this.cntxt_Scope_RenameScope_Click);
+            this.cntxt_Scope_RenameScope.Click += new System.EventHandler(this.cntxt_Node_Rename_Click);
             // 
             // label2
             // 
@@ -264,16 +264,16 @@ namespace ZeroLocalizationToolGUI
             // cntxt_Key_Delete
             // 
             this.cntxt_Key_Delete.Name = "cntxt_Key_Delete";
-            this.cntxt_Key_Delete.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Key_Delete.Size = new System.Drawing.Size(160, 24);
             this.cntxt_Key_Delete.Text = "Delete Key";
-            this.cntxt_Key_Delete.Click += new System.EventHandler(this.cntxt_Key_Delete_Click);
+            this.cntxt_Key_Delete.Click += new System.EventHandler(this.cntxt_Node_Delete_Click);
             // 
             // cntxt_Key_Rename
             // 
             this.cntxt_Key_Rename.Name = "cntxt_Key_Rename";
-            this.cntxt_Key_Rename.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Key_Rename.Size = new System.Drawing.Size(160, 24);
             this.cntxt_Key_Rename.Text = "Rename Key";
-            this.cntxt_Key_Rename.Click += new System.EventHandler(this.cntxt_Key_Rename_Click);
+            this.cntxt_Key_Rename.Click += new System.EventHandler(this.cntxt_Node_Rename_Click);
             // 
             // button1
             // 
