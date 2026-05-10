@@ -682,14 +682,26 @@ namespace ZeroLocalizationToolShared.Modules
 			}
 			else
 			{
-				Scope scope = key.Owner;
-				scope.Keys.Remove(key);
+				Scope ownerScope = key.Owner;
+                ownerScope.Keys.Remove(key);
 			}
         }
 
         public void DeleteScope(string scopePath)
         {
+            string[] splitPath = scopePath.Split('.');
+			Scope scope = GetScope(scopePath);
 
+			// Is this a root level Scope?
+			if (splitPath.Length == 1)
+			{
+				Scopes.Remove(scope);
+			}
+			else
+			{
+				Scope ownerScope = scope.Owner;
+				ownerScope.Scopes.Remove(scope);
+			}
         }
     }
 

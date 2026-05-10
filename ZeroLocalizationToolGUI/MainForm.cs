@@ -121,6 +121,8 @@ namespace ZeroLocalizationToolGUI
 			if (node != null)
             {
                 scopeNode = node.Nodes.Add(scope.Name);
+                scopeNode.Tag = scope;
+                scopeNode.ContextMenuStrip = cntxt_Scope;
             }
 			else
             {
@@ -320,11 +322,15 @@ namespace ZeroLocalizationToolGUI
         {
             // TODO: add name validation here (no spaces, etc.)
 
+            string oldPath = e.Node.FullPath;
+
+            isNewNodeScope = e.Node.Tag is Scope;
+
             // this is so fucking stupid but whatever, cheers microslop x
-            BeginInvoke(new Action(() => NodeAfterEditCommitted(e.Node)));
+            BeginInvoke(new Action(() => NodeAfterEditCommitted(e.Node, oldPath)));
         }
 
-        void NodeAfterEditCommitted(TreeNode node)
+        void NodeAfterEditCommitted(TreeNode node, string oldPath)
         {
             string nodePath = node.FullPath;
 
@@ -337,6 +343,19 @@ namespace ZeroLocalizationToolGUI
                 else
                 {
                     Key key = commentsConfig.LocalizationDataBase.AddKey(nodePath);
+                }
+            }
+            else
+            {
+                if (isNewNodeScope)
+                {
+                    Scope scope = commentsConfig.LocalizationDataBase.GetScope(oldPath);
+                    scope.Rename(node.Text);
+                }
+                else
+                {
+                    Key key = commentsConfig.LocalizationDataBase.GetKey(oldPath);
+                    key.Rename(node.Text);
                 }
             }
 
@@ -363,15 +382,15 @@ namespace ZeroLocalizationToolGUI
                 }
                 else
                 {
-                    Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(nodePath);
-                    if (key != null)
+                    if (isNewNodeScope)
                     {
-                        key.Rename(node.Text);
+                        Scope scope = localizationConfigs[lang].LocalizationDataBase.GetScope(oldPath);
+                        scope.Rename(node.Text);
                     }
                     else
                     {
-                        Scope scope = localizationConfigs[lang].LocalizationDataBase.GetScope(nodePath);
-                        scope.Rename(node.Text);
+                        Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(oldPath);
+                        key.Rename(node.Text);
                     }
                 }
             }
@@ -381,7 +400,26 @@ namespace ZeroLocalizationToolGUI
 
         private void cntxt_Key_Delete_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("hello");
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                if (menuItem.Owner is ContextMenuStrip owner)
+                {
+                    // Get the control that is displaying this context menu
+                    TreeView treeView = owner.SourceControl as TreeView;
+                    TreeNode node = treeView.SelectedNode;
+
+                    commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
+                    foreach (string lang in localizationConfigs.Keys)
+                    {
+                        localizationConfigs[lang].LocalizationDataBase.DeleteKey(node.FullPath);
+                    }
+
+                    node.Remove();
+                }
+            }
         }
 
         private void cntxt_Key_Rename_Click(object sender, EventArgs e)
@@ -437,7 +475,26 @@ namespace ZeroLocalizationToolGUI
 
         private void cntxt_Scope_DeleteScope_Click(object sender, EventArgs e)
         {
+            // Try to cast the sender to a ToolStripItem
+            ToolStripItem menuItem = sender as ToolStripItem;
+            if (menuItem != null)
+            {
+                // Retrieve the ContextMenuStrip that owns this ToolStripItem
+                if (menuItem.Owner is ContextMenuStrip owner)
+                {
+                    // Get the control that is displaying this context menu
+                    TreeView treeView = owner.SourceControl as TreeView;
+                    TreeNode node = treeView.SelectedNode;
 
+                    commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
+                    foreach (string lang in localizationConfigs.Keys)
+                    {
+                        localizationConfigs[lang].LocalizationDataBase.DeleteScope(node.FullPath);
+                    }
+
+                    node.Remove();
+                }
+            }
         }
 
         private void cntxt_Scope_RenameScope_Click(object sender, EventArgs e)
