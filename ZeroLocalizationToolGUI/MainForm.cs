@@ -318,19 +318,25 @@ namespace ZeroLocalizationToolGUI
 
         private void treeView_Database_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            string nodePath = e.Node.FullPath;
-            string parentPath = nodePath.Remove(nodePath.LastIndexOf('.'));
-            string editedPath = parentPath + "." + e.Label;
+            // TODO: add name validation here (no spaces, etc.)
+
+            // this is so fucking stupid but whatever, cheers microslop x
+            BeginInvoke(new Action(() => NodeAfterEditCommitted(e.Node)));
+        }
+
+        void NodeAfterEditCommitted(TreeNode node)
+        {
+            string nodePath = node.FullPath;
 
             if (isEditingNewNode)
             {
                 if (isNewNodeScope)
                 {
-                    Scope scope = commentsConfig.LocalizationDataBase.AddScope(editedPath);
+                    Scope scope = commentsConfig.LocalizationDataBase.AddScope(nodePath);
                 }
                 else
                 {
-                    Key key = commentsConfig.LocalizationDataBase.AddKey(editedPath);
+                    Key key = commentsConfig.LocalizationDataBase.AddKey(nodePath);
                 }
             }
 
@@ -340,18 +346,18 @@ namespace ZeroLocalizationToolGUI
                 {
                     if (isNewNodeScope)
                     {
-                        Scope scope = localizationConfigs[lang].LocalizationDataBase.AddScope(editedPath);
+                        Scope scope = localizationConfigs[lang].LocalizationDataBase.AddScope(nodePath);
                         if (lang == "english")
                         {
-                            e.Node.Tag = scope;
+                            node.Tag = scope;
                         }
                     }
                     else
                     {
-                        Key key = localizationConfigs[lang].LocalizationDataBase.AddKey(editedPath);
+                        Key key = localizationConfigs[lang].LocalizationDataBase.AddKey(nodePath);
                         if (lang == "english")
                         {
-                            e.Node.Tag = key;
+                            node.Tag = key;
                         }
                     }
                 }
@@ -360,16 +366,17 @@ namespace ZeroLocalizationToolGUI
                     Key key = localizationConfigs[lang].LocalizationDataBase.GetKey(nodePath);
                     if (key != null)
                     {
-                        key.Rename(e.Label);
+                        key.Rename(node.Text);
                     }
                     else
                     {
                         Scope scope = localizationConfigs[lang].LocalizationDataBase.GetScope(nodePath);
-                        scope.Rename(e.Label);
+                        scope.Rename(node.Text);
                     }
                 }
             }
             isEditingNewNode = false;
+            treeView_Database.SelectedNode = node;
         }
 
         private void cntxt_Key_Delete_Click(object sender, EventArgs e)
@@ -396,6 +403,7 @@ namespace ZeroLocalizationToolGUI
                     TreeNode node = treeView.SelectedNode;
                     TreeNode newNode = node.Nodes.Add("");
                     newNode.ContextMenuStrip = cntxt_Key;
+                    node.Expand();
 
                     isEditingNewNode = true;
                     isNewNodeScope = false;
@@ -418,6 +426,7 @@ namespace ZeroLocalizationToolGUI
                     TreeNode node = treeView.SelectedNode;
                     TreeNode newNode = node.Nodes.Add("");
                     newNode.ContextMenuStrip = cntxt_Scope;
+                    node.Expand();
 
                     isEditingNewNode = true;
                     isNewNodeScope = true;
