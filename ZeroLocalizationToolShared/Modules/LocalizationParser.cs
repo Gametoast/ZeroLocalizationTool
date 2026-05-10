@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -92,6 +93,7 @@ namespace ZeroLocalizationToolShared.Modules
 								{
 									// Add the new Scope to the DataBase container
 									curScope.Scopes.Add(scope); //						<--  might be what's causing problems
+									scope.Owner = curScope;
 
 									// Get a ref to the most recent Scope
 									curIndex = curScope.Scopes.Count - 1;
@@ -123,6 +125,7 @@ namespace ZeroLocalizationToolShared.Modules
 								{
 									// Add the new Key to the Scope container
 									curScope.Keys.Add(key);
+									key.Owner = curScope;
 
 									// Get a ref to the most recent Key
 									curIndex = curScope.Keys.Count - 1;
@@ -632,6 +635,7 @@ namespace ZeroLocalizationToolShared.Modules
 
 				Scope scope = GetScope(parentPath);
 				scope.Keys.Add(newKey);
+				newKey.Owner = scope;
             }
 
             return newKey;
@@ -660,9 +664,32 @@ namespace ZeroLocalizationToolShared.Modules
 
                 Scope scope = GetScope(parentPath);
 				scope.Scopes.Add(newScope);
+				newScope.Owner = scope;
             }
 
             return newScope;
+        }
+
+		public void DeleteKey(string keyPath)
+        {
+            string[] splitPath = keyPath.Split('.');
+            Key key = GetKey(keyPath);
+
+            // Is this a root level Key?
+            if (splitPath.Length == 1)
+			{
+				Keys.Remove(key);
+			}
+			else
+			{
+				Scope scope = key.Owner;
+				scope.Keys.Remove(key);
+			}
+        }
+
+        public void DeleteScope(string scopePath)
+        {
+
         }
     }
 
@@ -671,6 +698,7 @@ namespace ZeroLocalizationToolShared.Modules
 		public string Name { get; set; }
 		public List<Scope> Scopes { get; set; }
 		public List<Key> Keys { get; set; }
+		public Scope Owner { get; set; }
 
 		public Scope()
 		{
@@ -690,6 +718,7 @@ namespace ZeroLocalizationToolShared.Modules
 		public string Size { get; set; }
 		public List<string> BinaryValues { get; set; }
 		public string Value { get; set; }
+		public Scope Owner { get; set; }
 
 		public Key()
 		{
