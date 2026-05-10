@@ -26,6 +26,7 @@ namespace ZeroLocalizationToolGUI
 		bool isUpdatingUI = false;
         bool isEditingNewNode = false;
         bool isEditingNodeScope = false;
+        bool dirtyChanges = false;
 
         public MainForm()
 		{
@@ -48,7 +49,10 @@ namespace ZeroLocalizationToolGUI
 
 			bool englishFound = false;
 
-			if (openDlg_AddProjectPrompt.ShowDialog() == CommonFileDialogResult.Ok)
+            CommonFileDialogResult dialogResult = openDlg_AddProjectPrompt.ShowDialog();
+
+
+            if (dialogResult == CommonFileDialogResult.Ok)
 			{
 				string[] cfgFiles = Directory.GetFiles(openDlg_AddProjectPrompt.FileName, "*.cfg");
 
@@ -79,16 +83,81 @@ namespace ZeroLocalizationToolGUI
 						}
 					}
                 }
-				cmb_CurLanguage.SelectedIndex = 0;
 
-				if (!englishFound)
-				{
-					MessageBox.Show("English.cfg is required but was not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if (englishFound)
+                {
+                    cmb_CurLanguage.SelectedIndex = 0;
 				}
+                else
+                {
+                    DialogResult errorResult = MessageBox.Show("English.cfg is required but was not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (errorResult == DialogResult.OK)
+                    {
+                        Application.Exit();
+                    }
+                }
 			}
-		}
+            else
+            {
+                Application.Exit();
+            }
+        }
 
-		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.S:
+                        ShowDialog_Save();
+                        e.Handled = true;
+                        break;
+                    case Keys.Q:
+                        Application.Exit();
+                        e.Handled = true;
+                        break;
+                }
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dirtyChanges)
+            {
+                ShowDialog_Quit(e);
+            }
+        }
+
+        void ShowDialog_Quit(FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("You have unsaved changes. Save now?", "Quit Confirmation", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                Command_Save();
+            }
+            else if (result == DialogResult.Cancel)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        void MarkDirtyChanges(bool dirty)
+        {
+            dirtyChanges = dirty;
+
+            string windowName = "Zero Localization Tool";
+
+            if (dirty)
+            {
+                windowName = "* Zero Localization Tool (unsaved changes)";
+            }
+
+            this.Text = windowName;
+            this.Update();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
 		}
@@ -231,6 +300,8 @@ namespace ZeroLocalizationToolGUI
 		{
 			if (selectedNode != null)
 			{
+                MarkDirtyChanges(true);
+
 				string keyPath = selectedNode.FullPath;
 
 				// Comment text
@@ -310,12 +381,32 @@ namespace ZeroLocalizationToolGUI
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			commentsConfig.LocalizationDataBase.WriteToFile(commentsConfig.FilePath);
+            ShowDialog_Save();
+        }
 
-			foreach (string lang in localizationConfigs.Keys)
-			{
-				localizationConfigs[lang].LocalizationDataBase.WriteToFile(localizationConfigs[lang].FilePath);
-			}
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        void ShowDialog_Save()
+        {
+            if (MessageBox.Show("Are you sure you want to overwrite the localization files with your changes?", "Save Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Command_Save();
+            }
+        }
+
+        void Command_Save()
+        {
+            commentsConfig.LocalizationDataBase.WriteToFile(commentsConfig.FilePath);
+
+            foreach (string lang in localizationConfigs.Keys)
+            {
+                localizationConfigs[lang].LocalizationDataBase.WriteToFile(localizationConfigs[lang].FilePath);
+            }
+
+            MarkDirtyChanges(false);
         }
 
         private void treeView_Database_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
@@ -335,6 +426,8 @@ namespace ZeroLocalizationToolGUI
 
         void NodeAfterEditCommitted(TreeNode node, string oldPath)
         {
+            MarkDirtyChanges(true);
+
             string nodePath = node.FullPath;
 
             if (isEditingNewNode)
@@ -491,6 +584,8 @@ namespace ZeroLocalizationToolGUI
 
             if (node == null || node.Tag is Scope)
             {
+                MarkDirtyChanges(true);
+
                 if (node == null)
                 {
                     newNode = treeView_Database.Nodes.Add("");
@@ -523,32 +618,39 @@ namespace ZeroLocalizationToolGUI
 
         void Command_DeleteNode(TreeNode node)
         {
-            if (node.Tag is Scope)
+            if (MessageBox.Show(string.Format("Are you sure you want to delete '{0}' and all of its children?", node.FullPath), "Delete Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
-                commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
-            }
-            else
-            {
-                commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
-            }
+                MarkDirtyChanges(true);
 
-            foreach (string lang in localizationConfigs.Keys)
-            {
                 if (node.Tag is Scope)
                 {
-                    localizationConfigs[lang].LocalizationDataBase.DeleteScope(node.FullPath);
+                    commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
                 }
                 else
                 {
-                    localizationConfigs[lang].LocalizationDataBase.DeleteKey(node.FullPath);
+                    commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
                 }
-            }
 
-            node.Remove();
+                foreach (string lang in localizationConfigs.Keys)
+                {
+                    if (node.Tag is Scope)
+                    {
+                        localizationConfigs[lang].LocalizationDataBase.DeleteScope(node.FullPath);
+                    }
+                    else
+                    {
+                        localizationConfigs[lang].LocalizationDataBase.DeleteKey(node.FullPath);
+                    }
+                }
+
+                node.Remove();
+            }
         }
 
         void Command_RenameNode(TreeNode node)
         {
+            MarkDirtyChanges(true);
+
             isEditingNodeScope = node.Tag is Scope;
             node.BeginEdit();
         }
@@ -566,6 +668,27 @@ namespace ZeroLocalizationToolGUI
             if (e.Button == MouseButtons.Right)
             {
                 treeView_Database.SelectedNode = e.Node;
+            }
+        }
+
+        private void treeView_Database_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F2:
+                    if (selectedNode != null)
+                    {
+                        Command_RenameNode(selectedNode);
+                        e.Handled = true;
+                    }
+                    break;
+                case Keys.Delete:
+                    if (selectedNode != null)
+                    {
+                        Command_DeleteNode(selectedNode);
+                        e.Handled = true;
+                    }
+                    break;
             }
         }
     }

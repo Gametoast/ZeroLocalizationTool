@@ -86,22 +86,26 @@ namespace ZeroLocalizationToolGUI
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Visible = false;
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // lbl_NodePath
             // 
@@ -120,7 +124,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_OriginalText.Margin = new System.Windows.Forms.Padding(4);
             this.rtb_OriginalText.Name = "rtb_OriginalText";
             this.rtb_OriginalText.Size = new System.Drawing.Size(446, 258);
-            this.rtb_OriginalText.TabIndex = 4;
+            this.rtb_OriginalText.TabIndex = 1;
             this.rtb_OriginalText.Text = "";
             this.rtb_OriginalText.TextChanged += new System.EventHandler(this.rtb_OriginalText_TextChanged);
             // 
@@ -133,10 +137,11 @@ namespace ZeroLocalizationToolGUI
             this.treeView_Database.Name = "treeView_Database";
             this.treeView_Database.PathSeparator = ".";
             this.treeView_Database.Size = new System.Drawing.Size(295, 613);
-            this.treeView_Database.TabIndex = 2;
+            this.treeView_Database.TabIndex = 0;
             this.treeView_Database.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView_Database_AfterLabelEdit);
             this.treeView_Database.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_Database_AfterSelect);
             this.treeView_Database.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_Database_NodeMouseClick);
+            this.treeView_Database.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView_Database_KeyDown);
             // 
             // cntxt_RootLevel
             // 
@@ -169,7 +174,7 @@ namespace ZeroLocalizationToolGUI
             this.cmb_CurLanguage.MaxDropDownItems = 99;
             this.cmb_CurLanguage.Name = "cmb_CurLanguage";
             this.cmb_CurLanguage.Size = new System.Drawing.Size(242, 24);
-            this.cmb_CurLanguage.TabIndex = 5;
+            this.cmb_CurLanguage.TabIndex = 2;
             this.cmb_CurLanguage.SelectedIndexChanged += new System.EventHandler(this.cmb_CurLanguage_SelectedIndexChanged);
             // 
             // rtb_TranslatedText
@@ -179,7 +184,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_TranslatedText.Margin = new System.Windows.Forms.Padding(4);
             this.rtb_TranslatedText.Name = "rtb_TranslatedText";
             this.rtb_TranslatedText.Size = new System.Drawing.Size(446, 258);
-            this.rtb_TranslatedText.TabIndex = 6;
+            this.rtb_TranslatedText.TabIndex = 3;
             this.rtb_TranslatedText.Text = "";
             this.rtb_TranslatedText.Visible = false;
             this.rtb_TranslatedText.TextChanged += new System.EventHandler(this.rtb_TranslatedText_TextChanged);
@@ -191,7 +196,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_Comments.Margin = new System.Windows.Forms.Padding(4);
             this.rtb_Comments.Name = "rtb_Comments";
             this.rtb_Comments.Size = new System.Drawing.Size(446, 258);
-            this.rtb_Comments.TabIndex = 7;
+            this.rtb_Comments.TabIndex = 4;
             this.rtb_Comments.Text = "";
             this.rtb_Comments.TextChanged += new System.EventHandler(this.rtb_Comments_TextChanged);
             // 
@@ -213,7 +218,7 @@ namespace ZeroLocalizationToolGUI
             this.cntxt_Scope_DeleteScope,
             this.cntxt_Scope_RenameScope});
             this.cntxt_Scope.Name = "cntxt_Scope";
-            this.cntxt_Scope.Size = new System.Drawing.Size(211, 128);
+            this.cntxt_Scope.Size = new System.Drawing.Size(202, 100);
             // 
             // cntxt_Scope_AddKey
             // 
@@ -232,14 +237,16 @@ namespace ZeroLocalizationToolGUI
             // cntxt_Scope_DeleteScope
             // 
             this.cntxt_Scope_DeleteScope.Name = "cntxt_Scope_DeleteScope";
-            this.cntxt_Scope_DeleteScope.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Scope_DeleteScope.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.cntxt_Scope_DeleteScope.Size = new System.Drawing.Size(201, 24);
             this.cntxt_Scope_DeleteScope.Text = "Delete Scope";
             this.cntxt_Scope_DeleteScope.Click += new System.EventHandler(this.cntxt_Node_Delete_Click);
             // 
             // cntxt_Scope_RenameScope
             // 
             this.cntxt_Scope_RenameScope.Name = "cntxt_Scope_RenameScope";
-            this.cntxt_Scope_RenameScope.Size = new System.Drawing.Size(177, 24);
+            this.cntxt_Scope_RenameScope.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.cntxt_Scope_RenameScope.Size = new System.Drawing.Size(201, 24);
             this.cntxt_Scope_RenameScope.Text = "Rename Scope";
             this.cntxt_Scope_RenameScope.Click += new System.EventHandler(this.cntxt_Node_Rename_Click);
             // 
@@ -259,19 +266,21 @@ namespace ZeroLocalizationToolGUI
             this.cntxt_Key_Delete,
             this.cntxt_Key_Rename});
             this.cntxt_Key.Name = "cntxt_Key";
-            this.cntxt_Key.Size = new System.Drawing.Size(161, 52);
+            this.cntxt_Key.Size = new System.Drawing.Size(185, 52);
             // 
             // cntxt_Key_Delete
             // 
             this.cntxt_Key_Delete.Name = "cntxt_Key_Delete";
-            this.cntxt_Key_Delete.Size = new System.Drawing.Size(160, 24);
+            this.cntxt_Key_Delete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.cntxt_Key_Delete.Size = new System.Drawing.Size(210, 24);
             this.cntxt_Key_Delete.Text = "Delete Key";
             this.cntxt_Key_Delete.Click += new System.EventHandler(this.cntxt_Node_Delete_Click);
             // 
             // cntxt_Key_Rename
             // 
             this.cntxt_Key_Rename.Name = "cntxt_Key_Rename";
-            this.cntxt_Key_Rename.Size = new System.Drawing.Size(160, 24);
+            this.cntxt_Key_Rename.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.cntxt_Key_Rename.Size = new System.Drawing.Size(210, 24);
             this.cntxt_Key_Rename.Text = "Rename Key";
             this.cntxt_Key_Rename.Click += new System.EventHandler(this.cntxt_Node_Rename_Click);
             // 
@@ -283,6 +292,7 @@ namespace ZeroLocalizationToolGUI
             this.button1.TabIndex = 13;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainForm
@@ -300,11 +310,14 @@ namespace ZeroLocalizationToolGUI
             this.Controls.Add(this.lbl_NodePath);
             this.Controls.Add(this.treeView_Database);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainForm";
             this.Text = "Zero Localization Tool";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.cntxt_RootLevel.ResumeLayout(false);
