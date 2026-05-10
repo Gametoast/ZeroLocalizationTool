@@ -622,6 +622,7 @@ namespace ZeroLocalizationToolShared.Modules
             if (splitPath.Length == 1)
 			{
 				Keys.Add(newKey);
+				// no owner for root
 			}
 			else
 			{
@@ -651,6 +652,7 @@ namespace ZeroLocalizationToolShared.Modules
             if (splitPath.Length == 1)
             {
 				Scopes.Add(newScope);
+				// no owner for root
             }
             else
             {
