@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -411,7 +412,27 @@ namespace ZeroLocalizationToolGUI
 
         private void treeView_Database_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            // TODO: add name validation here (no spaces, etc.)
+            string label = e.Label ?? e.Node.Text;
+
+            if (label.Length == 0)
+            {
+                e.CancelEdit = true;
+                MessageBox.Show("Invalid name. The Key/Scope cannot be blank.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Node.BeginEdit();
+
+                return;
+            }
+
+            string pattern = @"^[A-Za-z0-9_-]+$";
+            bool isValid = Regex.IsMatch(label, pattern);
+
+            if (!isValid)
+            {
+                e.CancelEdit = true;
+                MessageBox.Show("Invalid name. Key/Scope names can only include alphanumerical, dash, or underscore characters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Node.BeginEdit();
+                return;
+            }
 
             string oldPath = e.Node.FullPath;
 
