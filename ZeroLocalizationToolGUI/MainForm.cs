@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ZeroLocalizationToolGUI.Modules;
 using ZeroLocalizationToolShared.Modules;
 
@@ -166,6 +166,17 @@ namespace ZeroLocalizationToolGUI
         private void treeView_Database_AfterSelect(object sender, TreeViewEventArgs e)
         {
             selectedNode = e.Node;
+
+            if (e.Node.Tag is Scope)
+            {
+                addScopeToolStripMenuItem.Enabled = true;
+                addKeyToolStripMenuItem.Enabled = true;
+            }
+            else if (e.Node.Tag is Key)
+            {
+                addScopeToolStripMenuItem.Enabled = false;
+                addKeyToolStripMenuItem.Enabled = true;
+            }
 
             string keyPath = e.Node.FullPath;
 			UpdateKeyValueViews(keyPath);
@@ -600,6 +611,28 @@ namespace ZeroLocalizationToolGUI
             Command_AddNode(null, true);
         }
 
+        void Hotkey_AddNode(bool isScope)
+        {
+            TreeNode node = treeView_Database.SelectedNode;
+
+            if (node != null)
+            {
+                if (node.Tag is Scope)
+                {
+                    Command_AddNode(node, isScope);
+                }
+                else if (node.Tag is Key)
+                {
+                    // Can't add a Scope to a Key!
+                    if (!isScope)
+                    {
+                        // Add a Key to the parent Scope
+                        Command_AddNode(node.Parent, false);
+                    }
+                }
+            }
+        }
+
         void Command_AddNode(TreeNode node, bool isScope)
         {
             TreeNode newNode;
@@ -640,41 +673,47 @@ namespace ZeroLocalizationToolGUI
 
         void Command_DeleteNode(TreeNode node)
         {
-            if (MessageBox.Show(string.Format("Are you sure you want to delete '{0}' and all of its children?", node.FullPath), "Delete Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (node != null)
             {
-                MarkDirtyChanges(true);
+                if (MessageBox.Show(string.Format("Are you sure you want to delete '{0}' and all of its children?", node.FullPath), "Delete Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                {
+                    MarkDirtyChanges(true);
 
-                if (node.Tag is Scope)
-                {
-                    commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
-                }
-                else
-                {
-                    commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
-                }
-
-                foreach (string lang in localizationConfigs.Keys)
-                {
                     if (node.Tag is Scope)
                     {
-                        localizationConfigs[lang].LocalizationDataBase.DeleteScope(node.FullPath);
+                        commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
                     }
                     else
                     {
-                        localizationConfigs[lang].LocalizationDataBase.DeleteKey(node.FullPath);
+                        commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
                     }
-                }
 
-                node.Remove();
+                    foreach (string lang in localizationConfigs.Keys)
+                    {
+                        if (node.Tag is Scope)
+                        {
+                            localizationConfigs[lang].LocalizationDataBase.DeleteScope(node.FullPath);
+                        }
+                        else
+                        {
+                            localizationConfigs[lang].LocalizationDataBase.DeleteKey(node.FullPath);
+                        }
+                    }
+
+                    node.Remove();
+                }
             }
         }
 
         void Command_RenameNode(TreeNode node)
         {
-            MarkDirtyChanges(true);
+            if (node != null)
+            {
+                MarkDirtyChanges(true);
 
-            isEditingNodeScope = node.Tag is Scope;
-            node.BeginEdit();
+                isEditingNodeScope = node.Tag is Scope;
+                node.BeginEdit();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -695,6 +734,20 @@ namespace ZeroLocalizationToolGUI
 
         private void treeView_Database_KeyDown(object sender, KeyEventArgs e)
         {
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.D2:
+                        Hotkey_AddNode(true);
+                        e.Handled = true;
+                        break;
+                    case Keys.D3:
+                        Hotkey_AddNode(false);
+                        e.Handled = true;
+                        break;
+                }
+            }
             switch (e.KeyCode)
             {
                 case Keys.F2:
@@ -712,6 +765,26 @@ namespace ZeroLocalizationToolGUI
                     }
                     break;
             }
+        }
+
+        private void addScopeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Hotkey_AddNode(true);
+        }
+
+        private void addKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Hotkey_AddNode(false);
+        }
+
+        private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Command_RenameNode(selectedNode);
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Command_DeleteNode(selectedNode);
         }
     }
 }

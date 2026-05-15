@@ -55,6 +55,11 @@ namespace ZeroLocalizationToolGUI
             this.cntxt_Key_Delete = new System.Windows.Forms.ToolStripMenuItem();
             this.cntxt_Key_Rename = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.keysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addScopeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.cntxt_RootLevel.SuspendLayout();
             this.cntxt_Scope.SuspendLayout();
@@ -65,7 +70,8 @@ namespace ZeroLocalizationToolGUI
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_File});
+            this.toolStripMenuItem_File,
+            this.keysToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 1, 0, 1);
@@ -88,7 +94,6 @@ namespace ZeroLocalizationToolGUI
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Visible = false;
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
@@ -223,14 +228,14 @@ namespace ZeroLocalizationToolGUI
             // cntxt_Scope_AddKey
             // 
             this.cntxt_Scope_AddKey.Name = "cntxt_Scope_AddKey";
-            this.cntxt_Scope_AddKey.Size = new System.Drawing.Size(177, 24);
+            this.cntxt_Scope_AddKey.Size = new System.Drawing.Size(201, 24);
             this.cntxt_Scope_AddKey.Text = "Add Key";
             this.cntxt_Scope_AddKey.Click += new System.EventHandler(this.cntxt_Scope_AddKey_Click);
             // 
             // cntxt_Scope_AddScope
             // 
             this.cntxt_Scope_AddScope.Name = "cntxt_Scope_AddScope";
-            this.cntxt_Scope_AddScope.Size = new System.Drawing.Size(177, 24);
+            this.cntxt_Scope_AddScope.Size = new System.Drawing.Size(201, 24);
             this.cntxt_Scope_AddScope.Text = "Add Scope";
             this.cntxt_Scope_AddScope.Click += new System.EventHandler(this.cntxt_Scope_AddScope_Click);
             // 
@@ -272,7 +277,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.cntxt_Key_Delete.Name = "cntxt_Key_Delete";
             this.cntxt_Key_Delete.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.cntxt_Key_Delete.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Key_Delete.Size = new System.Drawing.Size(184, 24);
             this.cntxt_Key_Delete.Text = "Delete Key";
             this.cntxt_Key_Delete.Click += new System.EventHandler(this.cntxt_Node_Delete_Click);
             // 
@@ -280,7 +285,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.cntxt_Key_Rename.Name = "cntxt_Key_Rename";
             this.cntxt_Key_Rename.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.cntxt_Key_Rename.Size = new System.Drawing.Size(210, 24);
+            this.cntxt_Key_Rename.Size = new System.Drawing.Size(184, 24);
             this.cntxt_Key_Rename.Text = "Rename Key";
             this.cntxt_Key_Rename.Click += new System.EventHandler(this.cntxt_Node_Rename_Click);
             // 
@@ -294,6 +299,49 @@ namespace ZeroLocalizationToolGUI
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // keysToolStripMenuItem
+            // 
+            this.keysToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addScopeToolStripMenuItem,
+            this.addKeyToolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.keysToolStripMenuItem.Name = "keysToolStripMenuItem";
+            this.keysToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.keysToolStripMenuItem.Text = "Keys";
+            // 
+            // addScopeToolStripMenuItem
+            // 
+            this.addScopeToolStripMenuItem.Name = "addScopeToolStripMenuItem";
+            this.addScopeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
+            this.addScopeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.addScopeToolStripMenuItem.Text = "Add Scope";
+            this.addScopeToolStripMenuItem.Click += new System.EventHandler(this.addScopeToolStripMenuItem_Click);
+            // 
+            // addKeyToolStripMenuItem
+            // 
+            this.addKeyToolStripMenuItem.Name = "addKeyToolStripMenuItem";
+            this.addKeyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
+            this.addKeyToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.addKeyToolStripMenuItem.Text = "Add Key";
+            this.addKeyToolStripMenuItem.Click += new System.EventHandler(this.addKeyToolStripMenuItem_Click);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -354,6 +402,11 @@ namespace ZeroLocalizationToolGUI
         private System.Windows.Forms.ToolStripMenuItem cntxt_Key_Delete;
         private System.Windows.Forms.ToolStripMenuItem cntxt_Key_Rename;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem keysToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addScopeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addKeyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
 
