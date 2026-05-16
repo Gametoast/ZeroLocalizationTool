@@ -243,11 +243,13 @@ namespace ZeroLocalizationToolGUI
             {
                 addScopeToolStripMenuItem.Enabled = true;
                 addKeyToolStripMenuItem.Enabled = true;
+                btn_CopyEnglishValueToOtherLangs.Enabled = false;
             }
             else if (e.Node.Tag is Key)
             {
                 addScopeToolStripMenuItem.Enabled = false;
                 addKeyToolStripMenuItem.Enabled = true;
+                btn_CopyEnglishValueToOtherLangs.Enabled = true;
             }
 
             string keyPath = e.Node.FullPath;
@@ -417,6 +419,45 @@ namespace ZeroLocalizationToolGUI
                 }
 			}
 		}
+
+        int CopyEnglishKeyValueToOtherLanguages(string keyPath, bool overwriteTranslations)
+        {
+            int results = 0;
+
+            Key englishKey = localizationConfigs["english"].LocalizationDataBase.GetKey(keyPath);
+            string englishValue = englishKey.GetValue();
+
+            if (englishValue != string.Empty)
+            {
+                foreach (string lang in localizationConfigs.Keys)
+                {
+                    if (lang.ToLower() != "english")
+                    {
+                        Key translationKey = localizationConfigs[lang].LocalizationDataBase.GetKey(keyPath);
+                        string translatedValue = translationKey.GetValue();
+
+                        if (overwriteTranslations)
+                        {
+                            if (translatedValue != englishValue)
+                            {
+                                translationKey.SetValue(englishValue);
+                                results++;
+                            }
+                        }
+                        else
+                        {
+                            if (translatedValue == string.Empty && translatedValue != englishValue)
+                            {
+                                translationKey.SetValue(englishValue);
+                                results++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
 
         private void cmb_CurLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -918,6 +959,83 @@ namespace ZeroLocalizationToolGUI
         private void submitIssueOnGitHubToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(Resources.IssueLink);
+        }
+
+        IEnumerable<TreeNode> Collect(TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                yield return node;
+
+                foreach (var child in Collect(node.Nodes))
+                    yield return child;
+            }
+        }
+
+        private void copyEnglishToOtherLanguagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<TreeNode> allKeyNodes = Collect(treeView_Database.Nodes)
+                .Where(n => n.Tag is Key)
+                .ToList();
+
+            int results = 0;
+
+            DialogResult dialogResult = MessageBox.Show(
+                "This will go through all keys in the database and copy the English value into any untranslated (blank) language values for each key. \n\nDo you want to overwrite existing (non-blank) translations as well?",
+                "Copy Values Prompt",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+            if (dialogResult == DialogResult.Yes)
+            {
+                foreach (TreeNode node in allKeyNodes)
+                {
+                    results += CopyEnglishKeyValueToOtherLanguages(node.FullPath, true);
+                }
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                foreach (TreeNode node in allKeyNodes)
+                {
+                    results += CopyEnglishKeyValueToOtherLanguages(node.FullPath, false);
+                }
+            }
+
+            MessageBox.Show(string.Format("{0} values changed.", results), "Copy Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (selectedNode != null && selectedNode.Tag is Key)
+            {
+                UpdateKeyValueViews(selectedNode.FullPath);
+            }
+        }
+
+        private void btn_CopyEnglishValueToOtherLangs_Click(object sender, EventArgs e)
+        {
+            if (selectedNode != null && selectedNode.Tag is Key)
+            {
+                int results = 0;
+
+                DialogResult dialogResult = MessageBox.Show(
+                    "This will copy the English value into any untranslated (blank) language values for this key. \n\nDo you want to overwrite existing (non-blank) translations as well?",
+                    "Copy Values Prompt",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    results = CopyEnglishKeyValueToOtherLanguages(selectedNode.FullPath, true);
+                    UpdateKeyValueViews(selectedNode.FullPath);
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    results = CopyEnglishKeyValueToOtherLanguages(selectedNode.FullPath, false);
+                    UpdateKeyValueViews(selectedNode.FullPath);
+                }
+
+                MessageBox.Show(string.Format("{0} values changed.", results), "Copy Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

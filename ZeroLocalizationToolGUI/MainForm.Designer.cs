@@ -66,6 +66,7 @@ namespace ZeroLocalizationToolGUI
             this.cntxt_Key_Delete = new System.Windows.Forms.ToolStripMenuItem();
             this.cntxt_Key_Rename = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.btn_CopyEnglishValueToOtherLangs = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.cntxt_RootLevel.SuspendLayout();
             this.cntxt_Scope.SuspendLayout();
@@ -83,7 +84,7 @@ namespace ZeroLocalizationToolGUI
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 1, 0, 1);
-            this.menuStrip1.Size = new System.Drawing.Size(1228, 26);
+            this.menuStrip1.Size = new System.Drawing.Size(1228, 30);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -109,7 +110,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -117,7 +118,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -136,7 +137,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.addScopeToolStripMenuItem.Name = "addScopeToolStripMenuItem";
             this.addScopeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D2)));
-            this.addScopeToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
+            this.addScopeToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.addScopeToolStripMenuItem.Text = "Add Scope";
             this.addScopeToolStripMenuItem.Click += new System.EventHandler(this.addScopeToolStripMenuItem_Click);
             // 
@@ -144,7 +145,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.addKeyToolStripMenuItem.Name = "addKeyToolStripMenuItem";
             this.addKeyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D3)));
-            this.addKeyToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
+            this.addKeyToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.addKeyToolStripMenuItem.Text = "Add Key";
             this.addKeyToolStripMenuItem.Click += new System.EventHandler(this.addKeyToolStripMenuItem_Click);
             // 
@@ -152,7 +153,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             this.renameToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
@@ -160,7 +161,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -172,7 +173,6 @@ namespace ZeroLocalizationToolGUI
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
-            this.toolsToolStripMenuItem.Visible = false;
             // 
             // findReplaceToolStripMenuItem
             // 
@@ -185,8 +185,9 @@ namespace ZeroLocalizationToolGUI
             // copyEnglishToOtherLanguagesToolStripMenuItem
             // 
             this.copyEnglishToOtherLanguagesToolStripMenuItem.Name = "copyEnglishToOtherLanguagesToolStripMenuItem";
-            this.copyEnglishToOtherLanguagesToolStripMenuItem.Size = new System.Drawing.Size(311, 26);
-            this.copyEnglishToOtherLanguagesToolStripMenuItem.Text = "Copy English to Other Languages";
+            this.copyEnglishToOtherLanguagesToolStripMenuItem.Size = new System.Drawing.Size(320, 26);
+            this.copyEnglishToOtherLanguagesToolStripMenuItem.Text = "Copy English to Other Languages...";
+            this.copyEnglishToOtherLanguagesToolStripMenuItem.Click += new System.EventHandler(this.copyEnglishToOtherLanguagesToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -402,11 +403,24 @@ namespace ZeroLocalizationToolGUI
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btn_CopyEnglishValueToOtherLangs
+            // 
+            this.btn_CopyEnglishValueToOtherLangs.AutoSize = true;
+            this.btn_CopyEnglishValueToOtherLangs.Enabled = false;
+            this.btn_CopyEnglishValueToOtherLangs.Location = new System.Drawing.Point(638, 315);
+            this.btn_CopyEnglishValueToOtherLangs.Name = "btn_CopyEnglishValueToOtherLangs";
+            this.btn_CopyEnglishValueToOtherLangs.Size = new System.Drawing.Size(268, 27);
+            this.btn_CopyEnglishValueToOtherLangs.TabIndex = 14;
+            this.btn_CopyEnglishValueToOtherLangs.Text = "Copy English Value to Other Languages...";
+            this.btn_CopyEnglishValueToOtherLangs.UseVisualStyleBackColor = true;
+            this.btn_CopyEnglishValueToOtherLangs.Click += new System.EventHandler(this.btn_CopyEnglishValueToOtherLangs_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1228, 652);
+            this.Controls.Add(this.btn_CopyEnglishValueToOtherLangs);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -472,6 +486,7 @@ namespace ZeroLocalizationToolGUI
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyEnglishToOtherLanguagesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem submitIssueOnGitHubToolStripMenuItem;
+        private System.Windows.Forms.Button btn_CopyEnglishValueToOtherLangs;
     }
 }
 
