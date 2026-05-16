@@ -869,14 +869,6 @@ namespace ZeroLocalizationToolGUI
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            localizationConfigs["english"].LocalizationDataBase.AddScope("somebullshit");
-            localizationConfigs["english"].LocalizationDataBase.AddKey("somebullshit.myNewKey");
-
-            Debug.WriteLine("hello");
-        }
-
         private void treeView_Database_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
