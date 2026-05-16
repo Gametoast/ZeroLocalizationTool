@@ -79,7 +79,7 @@ namespace ZeroLocalizationToolShared.Modules
 				// Convert each character to unicode and reverse it
 				for (int c = 0; c < chars.Length; c++)
 				{
-					unicodeStr += Reverse(Convert.ToByte(chars[c]).ToString("x4").ToUpper());
+					unicodeStr += Reverse(Convert.ToInt32(chars[c]).ToString("x4").ToUpper());
 				}
 
 				list.Add(unicodeStr);
