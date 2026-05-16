@@ -22,7 +22,7 @@ namespace ZeroLocalizationToolGUI
 	{
 		public CommonOpenFileDialog openDlg_AddProjectPrompt = new CommonOpenFileDialog();
 		public LocalizationConfig commentsConfig;
-		public Dictionary<string, LocalizationConfig> localizationConfigs = new Dictionary<string, LocalizationConfig>();
+		public Dictionary<string, LocalizationConfig> localizationConfigs;
 
         bool isProjectLoaded = false;
 		bool isEnglishSelected = false;
@@ -80,6 +80,10 @@ namespace ZeroLocalizationToolGUI
                     }
                     else
                     {
+                        if (localizationConfigs == null)
+                        {
+                            localizationConfigs = new Dictionary<string, LocalizationConfig>();
+                        }
                         LocalizationConfig config = new LocalizationConfig();
                         config.FilePath = cfgFile;
                         config.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
@@ -93,6 +97,11 @@ namespace ZeroLocalizationToolGUI
                             PopulateTreeViewFromDatabase(config.LocalizationDataBase);
                         }
                     }
+                }
+
+                if (commentsConfig == null)
+                {
+                    rtb_Comments.Enabled = false;
                 }
 
                 if (englishFound)
@@ -128,8 +137,8 @@ namespace ZeroLocalizationToolGUI
 
         void ResetForm()
         {
-            commentsConfig = new LocalizationConfig();
-            localizationConfigs = new Dictionary<string, LocalizationConfig>();
+            commentsConfig = null;
+            localizationConfigs = null;
 
             isProjectLoaded = false;
             isEnglishSelected = false;
@@ -317,8 +326,11 @@ namespace ZeroLocalizationToolGUI
                         rtb_TranslatedText.Text = translatedKey.GetValue();
                     }
 
-                    Key commentKey = commentsConfig.LocalizationDataBase.GetKey(keyPath);
-                    rtb_Comments.Text = commentKey.GetValue();
+                    if (commentsConfig != null)
+                    {
+                        Key commentKey = commentsConfig.LocalizationDataBase.GetKey(keyPath);
+                        rtb_Comments.Text = commentKey.GetValue();
+                    }
                 }
                 // Or is it a scope?
                 else
@@ -350,14 +362,14 @@ namespace ZeroLocalizationToolGUI
                     }
                     else if (curLang == "english")
                     {
-                        rtb_Comments.Enabled = true;
+                        rtb_Comments.Enabled = commentsConfig != null;
                         rtb_OriginalText.Enabled = true;
                         rtb_TranslatedText.Visible = false;
                         rtb_TranslatedText.Enabled = false;
                     }
                     else if (curLang != "english")
                     {
-                        rtb_Comments.Enabled = true;
+                        rtb_Comments.Enabled = commentsConfig != null;
                         rtb_OriginalText.Enabled = false;
                         rtb_TranslatedText.Visible = true;
                         rtb_TranslatedText.Enabled = true;
@@ -382,8 +394,11 @@ namespace ZeroLocalizationToolGUI
 				// Comment text
 				if (fieldType == ELocalizationTextFieldType.Comment)
                 {
-                    Key commentKey = commentsConfig.LocalizationDataBase.GetKey(keyPath);
-                    commentKey.SetValue(rtb_Comments.Text);
+                    if (commentsConfig != null)
+                    {
+                        Key commentKey = commentsConfig.LocalizationDataBase.GetKey(keyPath);
+                        commentKey.SetValue(rtb_Comments.Text);
+                    }
                 }
 				else
                 {
@@ -448,7 +463,7 @@ namespace ZeroLocalizationToolGUI
 
         private void rtb_Comments_TextChanged(object sender, EventArgs e)
         {
-            if (isUpdatingUI)
+            if (isUpdatingUI || commentsConfig == null)
                 return;
 
             SetKeyValueFromSelectedNode(ELocalizationTextFieldType.Comment);
@@ -481,7 +496,10 @@ namespace ZeroLocalizationToolGUI
 
         void Command_Save()
         {
-            commentsConfig.LocalizationDataBase.WriteToFile(commentsConfig.FilePath);
+            if (commentsConfig != null)
+            {
+                commentsConfig.LocalizationDataBase.WriteToFile(commentsConfig.FilePath);
+            }
 
             foreach (string lang in localizationConfigs.Keys)
             {
@@ -533,28 +551,31 @@ namespace ZeroLocalizationToolGUI
 
             string nodePath = node.FullPath;
 
-            if (isEditingNewNode)
+            if (commentsConfig != null)
             {
-                if (isEditingNodeScope)
+                if (isEditingNewNode)
                 {
-                    Scope scope = commentsConfig.LocalizationDataBase.AddScope(nodePath);
+                    if (isEditingNodeScope)
+                    {
+                        Scope scope = commentsConfig.LocalizationDataBase.AddScope(nodePath);
+                    }
+                    else
+                    {
+                        Key key = commentsConfig.LocalizationDataBase.AddKey(nodePath);
+                    }
                 }
                 else
                 {
-                    Key key = commentsConfig.LocalizationDataBase.AddKey(nodePath);
-                }
-            }
-            else
-            {
-                if (isEditingNodeScope)
-                {
-                    Scope scope = commentsConfig.LocalizationDataBase.GetScope(oldPath);
-                    scope.Rename(node.Text);
-                }
-                else
-                {
-                    Key key = commentsConfig.LocalizationDataBase.GetKey(oldPath);
-                    key.Rename(node.Text);
+                    if (isEditingNodeScope)
+                    {
+                        Scope scope = commentsConfig.LocalizationDataBase.GetScope(oldPath);
+                        scope.Rename(node.Text);
+                    }
+                    else
+                    {
+                        Key key = commentsConfig.LocalizationDataBase.GetKey(oldPath);
+                        key.Rename(node.Text);
+                    }
                 }
             }
 
@@ -761,13 +782,16 @@ namespace ZeroLocalizationToolGUI
                 {
                     MarkDirtyChanges(true);
 
-                    if (node.Tag is Scope)
+                    if (commentsConfig != null)
                     {
-                        commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
-                    }
-                    else
-                    {
-                        commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
+                        if (node.Tag is Scope)
+                        {
+                            commentsConfig.LocalizationDataBase.DeleteScope(node.FullPath);
+                        }
+                        else
+                        {
+                            commentsConfig.LocalizationDataBase.DeleteKey(node.FullPath);
+                        }
                     }
 
                     foreach (string lang in localizationConfigs.Keys)
