@@ -11,7 +11,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ZeroLocalizationToolGUI.Forms;
 using ZeroLocalizationToolGUI.Modules;
+using ZeroLocalizationToolGUI.Properties;
 using ZeroLocalizationToolShared.Modules;
 
 namespace ZeroLocalizationToolGUI
@@ -22,6 +24,7 @@ namespace ZeroLocalizationToolGUI
 		public LocalizationConfig commentsConfig;
 		public Dictionary<string, LocalizationConfig> localizationConfigs = new Dictionary<string, LocalizationConfig>();
 
+        bool isProjectLoaded = false;
 		bool isEnglishSelected = false;
 		TreeNode selectedNode;
 		bool isUpdatingUI = false;
@@ -45,63 +48,111 @@ namespace ZeroLocalizationToolGUI
 		{
 			lbl_NodePath.Text = string.Empty;
 
-			openDlg_AddProjectPrompt.Title = "Open Localization Folder";
-			openDlg_AddProjectPrompt.IsFolderPicker = true;
+            ShowDialog_Open();
+        }
 
-			bool englishFound = false;
+        void ShowDialog_Open()
+        {
+
+            openDlg_AddProjectPrompt.Title = "Open Localization Folder";
+            openDlg_AddProjectPrompt.IsFolderPicker = true;
+
+            bool englishFound = false;
 
             CommonFileDialogResult dialogResult = openDlg_AddProjectPrompt.ShowDialog();
 
-
             if (dialogResult == CommonFileDialogResult.Ok)
-			{
-				string[] cfgFiles = Directory.GetFiles(openDlg_AddProjectPrompt.FileName, "*.cfg");
+            {
+                ResetForm();
 
-				foreach (string cfgFile in cfgFiles)
+                string[] cfgFiles = Directory.GetFiles(openDlg_AddProjectPrompt.FileName, "*.cfg");
+
+                foreach (string cfgFile in cfgFiles)
                 {
                     string languageName = Path.GetFileNameWithoutExtension(cfgFile).ToLower();
 
-					if (languageName == "comments")
-					{
-						commentsConfig = new LocalizationConfig();
-						commentsConfig.FilePath = cfgFile;
-						commentsConfig.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
-						Debug.WriteLine(commentsConfig.LocalizationDataBase.GetKey("cheats.ammo_off"));
+                    if (languageName == "comments")
+                    {
+                        commentsConfig = new LocalizationConfig();
+                        commentsConfig.FilePath = cfgFile;
+                        commentsConfig.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
+                        Debug.WriteLine(commentsConfig.LocalizationDataBase.GetKey("cheats.ammo_off"));
                     }
-					else
-					{
-						LocalizationConfig config = new LocalizationConfig();
-						config.FilePath = cfgFile;
-						config.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
-						localizationConfigs.Add(languageName, config);
+                    else
+                    {
+                        LocalizationConfig config = new LocalizationConfig();
+                        config.FilePath = cfgFile;
+                        config.LocalizationDataBase = LocalizationParser.ParseDataBase(cfgFile);
+                        localizationConfigs.Add(languageName, config);
 
-						cmb_CurLanguage.Items.Add(languageName);
+                        cmb_CurLanguage.Items.Add(languageName);
 
-						if (languageName == "english")
-						{
-							englishFound = true;
-							PopulateTreeViewFromDatabase(config.LocalizationDataBase);
-						}
-					}
+                        if (languageName == "english")
+                        {
+                            englishFound = true;
+                            PopulateTreeViewFromDatabase(config.LocalizationDataBase);
+                        }
+                    }
                 }
 
-				if (englishFound)
+                if (englishFound)
                 {
-                    cmb_CurLanguage.SelectedIndex = 0;
-				}
+                    SetIsProjectLoaded();
+                }
                 else
                 {
                     DialogResult errorResult = MessageBox.Show("English.cfg is required but was not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     if (errorResult == DialogResult.OK)
                     {
-                        Application.Exit();
+                        ResetForm();
                     }
                 }
-			}
+            }
             else
             {
-                Application.Exit();
+                //Application.Exit();
             }
+        }
+
+        void ShowDialog_ProjectNotLoaded()
+        {
+            if (!isProjectLoaded)
+            {
+                DialogResult dialogResult = MessageBox.Show("A localization project must be loaded in order to do this.", "Nice try, slick...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (dialogResult == DialogResult.OK)
+                {
+                    ShowDialog_Open();
+                }
+            }
+        }
+
+        void ResetForm()
+        {
+            commentsConfig = new LocalizationConfig();
+            localizationConfigs = new Dictionary<string, LocalizationConfig>();
+
+            isProjectLoaded = false;
+            isEnglishSelected = false;
+            selectedNode = null;
+            isUpdatingUI = false;
+            isEditingNewNode = false;
+            isEditingNodeScope = false;
+            dirtyChanges = false;
+
+            lbl_NodePath.Text = string.Empty;
+            cmb_CurLanguage.Items.Clear();
+            treeView_Database.Enabled = false;
+            treeView_Database.Nodes.Clear();
+            rtb_Comments.Text = string.Empty;
+            rtb_OriginalText.Text = string.Empty;
+            rtb_TranslatedText.Text = string.Empty;
+        }
+
+        void SetIsProjectLoaded()
+        {
+            cmb_CurLanguage.SelectedIndex = 0;
+            treeView_Database.Enabled = true;
+            isProjectLoaded = true;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -110,6 +161,10 @@ namespace ZeroLocalizationToolGUI
             {
                 switch (e.KeyCode)
                 {
+                    case Keys.O:
+                        ShowDialog_Open();
+                        e.Handled = true;
+                        break;
                     case Keys.S:
                         ShowDialog_Save();
                         e.Handled = true;
@@ -119,6 +174,14 @@ namespace ZeroLocalizationToolGUI
                         e.Handled = true;
                         break;
                 }
+            }
+
+            switch (e.KeyCode)
+            {
+                case Keys.F12:
+                    Command_ShowAboutForm();
+                    e.Handled = true;
+                    break;
             }
         }
 
@@ -160,7 +223,7 @@ namespace ZeroLocalizationToolGUI
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+            ShowDialog_Open();
 		}
 
         private void treeView_Database_AfterSelect(object sender, TreeViewEventArgs e)
@@ -403,9 +466,16 @@ namespace ZeroLocalizationToolGUI
 
         void ShowDialog_Save()
         {
-            if (MessageBox.Show("Are you sure you want to overwrite the localization files with your changes?", "Save Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (isProjectLoaded)
             {
-                Command_Save();
+                if (MessageBox.Show("Are you sure you want to overwrite the localization files with your changes?", "Save Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    Command_Save();
+                }
+            }
+            else
+            {
+                ShowDialog_ProjectNotLoaded();
             }
         }
 
@@ -613,6 +683,12 @@ namespace ZeroLocalizationToolGUI
 
         void Hotkey_AddNode(bool isScope)
         {
+            if (!isProjectLoaded)
+            {
+                ShowDialog_ProjectNotLoaded();
+                return; 
+            }
+
             TreeNode node = treeView_Database.SelectedNode;
 
             if (node != null)
@@ -673,6 +749,12 @@ namespace ZeroLocalizationToolGUI
 
         void Command_DeleteNode(TreeNode node)
         {
+            if (!isProjectLoaded)
+            {
+                ShowDialog_ProjectNotLoaded();
+                return;
+            }
+
             if (node != null)
             {
                 if (MessageBox.Show(string.Format("Are you sure you want to delete '{0}' and all of its children?", node.FullPath), "Delete Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
@@ -707,6 +789,12 @@ namespace ZeroLocalizationToolGUI
 
         void Command_RenameNode(TreeNode node)
         {
+            if (!isProjectLoaded)
+            {
+                ShowDialog_ProjectNotLoaded();
+                return;
+            }
+
             if (node != null)
             {
                 MarkDirtyChanges(true);
@@ -785,6 +873,27 @@ namespace ZeroLocalizationToolGUI
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Command_DeleteNode(selectedNode);
+        }
+
+        private void findReplaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Command_ShowAboutForm();
+        }
+
+        void Command_ShowAboutForm()
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.ShowDialog();
+        }
+
+        private void submitIssueOnGitHubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(Resources.IssueLink);
         }
     }
 }
