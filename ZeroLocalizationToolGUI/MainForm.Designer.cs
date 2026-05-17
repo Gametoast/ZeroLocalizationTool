@@ -30,6 +30,7 @@ namespace ZeroLocalizationToolGUI
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem_File = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,6 +70,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_OriginalText = new System.Windows.Forms.RichTextBox();
             this.splitContainer_Main = new System.Windows.Forms.SplitContainer();
             this.splitContainer_Languages = new System.Windows.Forms.SplitContainer();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.cntxt_RootLevel.SuspendLayout();
             this.cntxt_Scope.SuspendLayout();
@@ -193,8 +195,7 @@ namespace ZeroLocalizationToolGUI
             this.findReplaceToolStripMenuItem.Name = "findReplaceToolStripMenuItem";
             this.findReplaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findReplaceToolStripMenuItem.Size = new System.Drawing.Size(320, 26);
-            this.findReplaceToolStripMenuItem.Text = "Find && Replace";
-            this.findReplaceToolStripMenuItem.Visible = false;
+            this.findReplaceToolStripMenuItem.Text = "Find";
             this.findReplaceToolStripMenuItem.Click += new System.EventHandler(this.findReplaceToolStripMenuItem_Click);
             // 
             // copyEnglishToOtherLanguagesToolStripMenuItem
@@ -413,7 +414,7 @@ namespace ZeroLocalizationToolGUI
             this.btn_CopyEnglishValueToOtherLangs.Name = "btn_CopyEnglishValueToOtherLangs";
             this.btn_CopyEnglishValueToOtherLangs.Size = new System.Drawing.Size(268, 27);
             this.btn_CopyEnglishValueToOtherLangs.TabIndex = 14;
-            this.btn_CopyEnglishValueToOtherLangs.Text = "Copy English Value to Other Languages...";
+            this.btn_CopyEnglishValueToOtherLangs.Text = "Copy English to Other Languages...";
             this.btn_CopyEnglishValueToOtherLangs.UseVisualStyleBackColor = true;
             this.btn_CopyEnglishValueToOtherLangs.Click += new System.EventHandler(this.btn_CopyEnglishValueToOtherLangs_Click);
             // 
@@ -485,6 +486,7 @@ namespace ZeroLocalizationToolGUI
             // 
             // splitContainer_Languages.Panel2
             // 
+            this.splitContainer_Languages.Panel2.Controls.Add(this.button1);
             this.splitContainer_Languages.Panel2.Controls.Add(this.label2);
             this.splitContainer_Languages.Panel2.Controls.Add(this.cmb_CurLanguage);
             this.splitContainer_Languages.Panel2.Controls.Add(this.rtb_TranslatedText);
@@ -493,6 +495,16 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Languages.SplitterDistance = 230;
             this.splitContainer_Languages.TabIndex = 17;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(624, 7);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 15;
+            this.button1.Text = "Test";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -500,6 +512,7 @@ namespace ZeroLocalizationToolGUI
             this.ClientSize = new System.Drawing.Size(1006, 721);
             this.Controls.Add(this.splitContainer_Main);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -573,6 +586,7 @@ namespace ZeroLocalizationToolGUI
         private System.Windows.Forms.RichTextBox rtb_OriginalText;
         private System.Windows.Forms.SplitContainer splitContainer_Main;
         private System.Windows.Forms.SplitContainer splitContainer_Languages;
+        private System.Windows.Forms.Button button1;
     }
 }
 

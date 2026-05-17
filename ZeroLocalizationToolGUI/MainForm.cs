@@ -42,9 +42,35 @@ namespace ZeroLocalizationToolGUI
 			Comment,
 			Original,
 			Translation
-		}
+        }
 
-		private void MainForm_Load(object sender, EventArgs e)
+        public struct NodeNameSearchQuery
+        {
+            public string Expression;
+            public bool MatchWholeExpression;
+        }
+
+        public struct NodeNameSearchResult
+        {
+            public string NodePath;
+        }
+
+        public struct TranslationSearchQuery
+        {
+            public string Expression;
+            public bool MatchWholeExpression;
+            public bool MatchCase;
+            public string[] Languages;
+        }
+
+        public struct TranslationSearchResult
+        {
+            public string NodePath;
+            public string Language;
+            public string Text;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
 		{
 			lbl_NodePath.Text = string.Empty;
 
@@ -170,6 +196,10 @@ namespace ZeroLocalizationToolGUI
             {
                 switch (e.KeyCode)
                 {
+                    case Keys.F:
+                        ShowWindow_Find();
+                        e.Handled = true;
+                        break;
                     case Keys.O:
                         ShowDialog_Open();
                         e.Handled = true;
@@ -213,6 +243,12 @@ namespace ZeroLocalizationToolGUI
             {
                 e.Cancel = true;
             }
+        }
+
+        void ShowWindow_Find()
+        {
+            FindForm findForm = new FindForm();
+            findForm.Show(this);
         }
 
         void MarkDirtyChanges(bool dirty)
@@ -934,7 +970,7 @@ namespace ZeroLocalizationToolGUI
 
         private void findReplaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ShowWindow_Find();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1027,6 +1063,167 @@ namespace ZeroLocalizationToolGUI
                 }
 
                 MessageBox.Show(string.Format("{0} values changed.", results), "Copy Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        public List<NodeNameSearchResult> BeginNodeNameSearch(NodeNameSearchQuery query)
+        {
+            List<NodeNameSearchResult> results = new List<NodeNameSearchResult>();
+            List<TreeNode> foundNodes = new List<TreeNode>();
+
+            if (query.MatchWholeExpression)
+            {
+                foundNodes = Collect(treeView_Database.Nodes)
+                    .Where(n => n.FullPath.Contains(query.Expression))
+                    .ToList();
+            }
+            else
+            {
+                string[] parsedExpression = query.Expression.Split(' ');
+
+                foreach (string expressionPart in parsedExpression)
+                {
+                    foundNodes.AddRange(Collect(treeView_Database.Nodes)
+                        .Where(n => n.FullPath.Contains(expressionPart))
+                        .ToList());
+                }
+            }
+
+            foreach (TreeNode node in foundNodes)
+            {
+                results.Add(new NodeNameSearchResult()
+                {
+                    NodePath = node.FullPath
+                });
+                Debug.WriteLine(string.Format("Found match at {0}", node.FullPath));
+            }
+
+            return results;
+        }
+
+        public List<TranslationSearchResult> BeginTranslationSearch(TranslationSearchQuery query)
+        {
+            List<TranslationSearchResult> results = new List<TranslationSearchResult>();
+            List<TreeNode> allKeyNodes = new List<TreeNode>();
+
+            allKeyNodes = Collect(treeView_Database.Nodes)
+                .Where(n => n.Tag is Key)
+                .ToList();
+
+            foreach (string lang in query.Languages)
+            {
+                DataBase dataBase;
+                if (lang == "comments")
+                {
+                    dataBase = commentsConfig.LocalizationDataBase;
+                }
+                else
+                {
+                    dataBase = localizationConfigs[lang].LocalizationDataBase;
+                }
+
+                if (query.MatchWholeExpression)
+                {
+                    foreach (TreeNode node in allKeyNodes)
+                    {
+                        Key nodeKey = dataBase.GetKey(node.FullPath);
+                        if (nodeKey == null)
+                            continue;
+
+                        bool querySuccess;
+                        if (query.MatchCase)
+                        {
+                            querySuccess = nodeKey.GetValue().Contains(query.Expression);
+                        }
+                        else
+                        {
+                            querySuccess = nodeKey.GetValue().ToLower().Contains(query.Expression.ToLower());
+                        }
+
+                        if (querySuccess)
+                        {
+                            TranslationSearchResult newResult = new TranslationSearchResult()
+                            {
+                                Language = lang,
+                                NodePath = node.FullPath,
+                                Text = nodeKey.GetValue()
+                            };
+                            results.Add(newResult);
+                        }
+                    }
+                }
+                else
+                {
+                    string[] parsedExpression = query.Expression.Split(' ');
+
+                    foreach (string expressionPart in parsedExpression)
+                    {
+                        foreach (TreeNode node in allKeyNodes)
+                        {
+                            Key nodeKey = dataBase.GetKey(node.FullPath);
+                            if (nodeKey == null)
+                                continue;
+
+                            bool querySuccess;
+                            if (query.MatchCase)
+                            {
+                                querySuccess = nodeKey.GetValue().Contains(expressionPart);
+                            }
+                            else
+                            {
+                                querySuccess = nodeKey.GetValue().ToLower().Contains(expressionPart.ToLower());
+                            }
+
+                            if (querySuccess)
+                            {
+                                TranslationSearchResult newResult = new TranslationSearchResult()
+                                {
+                                    Language = lang,
+                                    NodePath = node.FullPath,
+                                    Text = nodeKey.GetValue()
+                                };
+                                results.Add(newResult);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        public void JumpToTreeViewNode(string nodePath)
+        {
+            TreeNode foundNode = GetNodeFromPath(treeView_Database.Nodes, nodePath);
+            this.Focus();
+            treeView_Database.SelectedNode = foundNode;
+            foundNode.EnsureVisible();
+            treeView_Database.Select();
+        }
+
+        public TreeNode GetNodeFromPath(TreeNodeCollection tncoll, string fullPath)
+        {
+            TreeNode tnFound;
+            foreach (TreeNode tnCurr in tncoll)
+            {
+                if (tnCurr.FullPath == fullPath)
+                {
+                    return tnCurr;
+                }
+                tnFound = GetNodeFromPath(tnCurr.Nodes, fullPath);
+                if (tnFound != null)
+                {
+                    return tnFound;
+                }
+            }
+            return null;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            foreach (string lang in localizationConfigs.Keys)
+            {
+                Debug.WriteLine(string.Format("{0} has {1} keys", lang, localizationConfigs[lang].LocalizationDataBase.AllKeys.Count));
             }
         }
     }

@@ -114,6 +114,7 @@ namespace ZeroLocalizationToolShared.Modules
 							{
 								// Add the new Key to the DataBase container
 								db.Keys.Add(key);
+								db.AllKeys.Add(key);
 
 								// Get a ref to the most recent Key
 								curIndex = db.Keys.Count - 1;
@@ -123,9 +124,10 @@ namespace ZeroLocalizationToolShared.Modules
 							{
 								if (curKey != null)
 								{
-									// Add the new Key to the Scope container
-									curScope.Keys.Add(key);
-									key.Owner = curScope;
+                                    // Add the new Key to the Scope container
+                                    key.Owner = curScope;
+                                    curScope.Keys.Add(key);
+                                    db.AllKeys.Add(key);
 
 									// Get a ref to the most recent Key
 									curIndex = curScope.Keys.Count - 1;
@@ -274,12 +276,14 @@ namespace ZeroLocalizationToolShared.Modules
 	{
 		public List<Scope> Scopes { get; set; }
 		public List<Key> Keys { get; set; }
+        public List<Key> AllKeys { get; set; }
 
-		public DataBase()
+        public DataBase()
 		{
 			Scopes = new List<Scope>();
 			Keys = new List<Key>();
-		}
+            AllKeys = new List<Key>();
+        }
 
 		/// <summary>
 		/// Writes the DataBase to the specified file path.
@@ -635,9 +639,11 @@ namespace ZeroLocalizationToolShared.Modules
 				Debug.WriteLine(parentPath);
 
 				Scope scope = GetScope(parentPath);
-				scope.Keys.Add(newKey);
-				newKey.Owner = scope;
+                newKey.Owner = scope;
+                scope.Keys.Add(newKey);
             }
+
+			AllKeys.Add(newKey);
 
             return newKey;
         }
@@ -704,6 +710,14 @@ namespace ZeroLocalizationToolShared.Modules
 				Scope ownerScope = scope.Owner;
 				ownerScope.Scopes.Remove(scope);
 			}
+        }
+
+        public IEnumerable<Key> CollectKeys()
+        {
+            foreach (Key key in AllKeys)
+            {
+                yield return key;
+            }
         }
     }
 
