@@ -92,7 +92,7 @@
             this.chklist_Languages.Location = new System.Drawing.Point(642, 74);
             this.chklist_Languages.Name = "chklist_Languages";
             this.chklist_Languages.Size = new System.Drawing.Size(171, 191);
-            this.chklist_Languages.TabIndex = 4;
+            this.chklist_Languages.TabIndex = 5;
             // 
             // lbl_LanguagesToSearch
             // 
@@ -122,7 +122,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 48);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(164, 84);
-            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Search for:";
             // 
@@ -166,7 +166,7 @@
             this.list_Results.Location = new System.Drawing.Point(12, 271);
             this.list_Results.Name = "list_Results";
             this.list_Results.Size = new System.Drawing.Size(801, 212);
-            this.list_Results.TabIndex = 10;
+            this.list_Results.TabIndex = 4;
             this.list_Results.UseCompatibleStateImageBehavior = false;
             this.list_Results.View = System.Windows.Forms.View.Details;
             this.list_Results.ItemActivate += new System.EventHandler(this.list_Results_ItemActivate);
