@@ -1201,6 +1201,12 @@ namespace ZeroLocalizationToolGUI
             treeView_Database.Select();
         }
 
+        public void JumpToTreeViewNode(string nodePath, string language)
+        {
+            JumpToTreeViewNode(nodePath);
+            cmb_CurLanguage.SelectedIndex = cmb_CurLanguage.FindString(language);
+        }
+
         public TreeNode GetNodeFromPath(TreeNodeCollection tncoll, string fullPath)
         {
             TreeNode tnFound;

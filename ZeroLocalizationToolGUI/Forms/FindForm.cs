@@ -37,6 +37,19 @@ namespace ZeroLocalizationToolGUI.Forms
             resultTextWidth = ResultText.Width;
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter &&
+                list_Results.Focused &&
+                list_Results.SelectedItems.Count > 0)
+            {
+                JumpToSelectedItem();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         void PopulateLanguages()
         {
             chklist_Languages.Items.Clear();
@@ -109,6 +122,7 @@ namespace ZeroLocalizationToolGUI.Forms
                     PopulateResults(results);
                 }
             }
+            list_Results.Focus();
         }
 
         void PopulateResults(List<MainForm.NodeNameSearchResult> results)
@@ -148,20 +162,25 @@ namespace ZeroLocalizationToolGUI.Forms
 
         private void list_Results_ItemActivate(object sender, EventArgs e)
         {
-            if (list_Results.Columns.Count == 1)
-            {
-                mainForm.JumpToTreeViewNode(list_Results.SelectedItems[0].SubItems[0].Text);
-            }
-            else
-            {
-                mainForm.JumpToTreeViewNode(list_Results.SelectedItems[0].SubItems[1].Text);
-            }
+            JumpToSelectedItem();
         }
 
         private void rad_KeyScopeNames_CheckedChanged(object sender, EventArgs e)
         {
             resultLanguageWidth = ResultLanguage.Width;
             resultTextWidth = ResultText.Width;
+        }
+
+        void JumpToSelectedItem()
+        {
+            if (list_Results.Columns.Count == 1)
+            {
+                mainForm.JumpToTreeViewNode(list_Results.SelectedItems[0].SubItems[0].Text);
+            }
+            else
+            {
+                mainForm.JumpToTreeViewNode(list_Results.SelectedItems[0].SubItems[1].Text, list_Results.SelectedItems[0].SubItems[0].Text);
+            }
         }
     }
 }
