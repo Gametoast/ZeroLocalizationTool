@@ -455,6 +455,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_OriginalText.Size = new System.Drawing.Size(438, 200);
             this.rtb_OriginalText.TabIndex = 4;
             this.rtb_OriginalText.Text = "";
+            this.rtb_OriginalText.TextChanged += new System.EventHandler(this.rtb_OriginalText_TextChanged);
             // 
             // splitContainer_Main
             // 
