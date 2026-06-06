@@ -48,6 +48,8 @@ namespace ZeroLocalizationToolGUI
             this.submitIssueOnGitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lbl_NodePath = new System.Windows.Forms.Label();
+            this.cntxt_KeyPath = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyKeyPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeView_Database = new System.Windows.Forms.TreeView();
             this.cntxt_RootLevel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cntxt_RootAddKey = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,9 +73,9 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Main = new System.Windows.Forms.SplitContainer();
             this.splitContainer_Languages = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
-            this.cntxt_KeyPath = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyKeyPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyKeyPathToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.cntxt_KeyPath.SuspendLayout();
             this.cntxt_RootLevel.SuspendLayout();
             this.cntxt_Scope.SuspendLayout();
             this.cntxt_Key.SuspendLayout();
@@ -89,7 +91,6 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Languages.Panel1.SuspendLayout();
             this.splitContainer_Languages.Panel2.SuspendLayout();
             this.splitContainer_Languages.SuspendLayout();
-            this.cntxt_KeyPath.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -188,6 +189,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.findReplaceToolStripMenuItem,
+            this.copyKeyPathToolStripMenuItem1,
             this.copyEnglishToOtherLanguagesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
@@ -243,6 +245,23 @@ namespace ZeroLocalizationToolGUI
             this.lbl_NodePath.Size = new System.Drawing.Size(57, 16);
             this.lbl_NodePath.TabIndex = 3;
             this.lbl_NodePath.Text = "KeyPath";
+            // 
+            // cntxt_KeyPath
+            // 
+            this.cntxt_KeyPath.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.cntxt_KeyPath.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyKeyPathToolStripMenuItem});
+            this.cntxt_KeyPath.Name = "cntxt_KeyPath";
+            this.cntxt_KeyPath.Size = new System.Drawing.Size(226, 26);
+            // 
+            // copyKeyPathToolStripMenuItem
+            // 
+            this.copyKeyPathToolStripMenuItem.Name = "copyKeyPathToolStripMenuItem";
+            this.copyKeyPathToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.C)));
+            this.copyKeyPathToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.copyKeyPathToolStripMenuItem.Text = "Copy Key Path";
+            this.copyKeyPathToolStripMenuItem.Click += new System.EventHandler(this.copyKeyPathToolStripMenuItem_Click);
             // 
             // treeView_Database
             // 
@@ -510,20 +529,15 @@ namespace ZeroLocalizationToolGUI
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // cntxt_KeyPath
+            // copyKeyPathToolStripMenuItem1
             // 
-            this.cntxt_KeyPath.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.cntxt_KeyPath.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyKeyPathToolStripMenuItem});
-            this.cntxt_KeyPath.Name = "cntxt_KeyPath";
-            this.cntxt_KeyPath.Size = new System.Drawing.Size(199, 36);
-            // 
-            // copyKeyPathToolStripMenuItem
-            // 
-            this.copyKeyPathToolStripMenuItem.Name = "copyKeyPathToolStripMenuItem";
-            this.copyKeyPathToolStripMenuItem.Size = new System.Drawing.Size(198, 32);
-            this.copyKeyPathToolStripMenuItem.Text = "Copy Key Path";
-            this.copyKeyPathToolStripMenuItem.Click += new System.EventHandler(this.copyKeyPathToolStripMenuItem_Click);
+            this.copyKeyPathToolStripMenuItem1.Enabled = false;
+            this.copyKeyPathToolStripMenuItem1.Name = "copyKeyPathToolStripMenuItem1";
+            this.copyKeyPathToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.C)));
+            this.copyKeyPathToolStripMenuItem1.Size = new System.Drawing.Size(259, 22);
+            this.copyKeyPathToolStripMenuItem1.Text = "Copy Key Path";
+            this.copyKeyPathToolStripMenuItem1.Click += new System.EventHandler(this.copyKeyPathToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -543,6 +557,7 @@ namespace ZeroLocalizationToolGUI
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.cntxt_KeyPath.ResumeLayout(false);
             this.cntxt_RootLevel.ResumeLayout(false);
             this.cntxt_Scope.ResumeLayout(false);
             this.cntxt_Key.ResumeLayout(false);
@@ -561,7 +576,6 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Languages.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_Languages)).EndInit();
             this.splitContainer_Languages.ResumeLayout(false);
-            this.cntxt_KeyPath.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -610,6 +624,7 @@ namespace ZeroLocalizationToolGUI
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ContextMenuStrip cntxt_KeyPath;
         private System.Windows.Forms.ToolStripMenuItem copyKeyPathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyKeyPathToolStripMenuItem1;
     }
 }
 

@@ -196,7 +196,7 @@ namespace ZeroLocalizationToolGUI
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            if (e.Modifiers == Keys.Control)
             {
                 switch (e.KeyCode)
                 {
@@ -214,6 +214,17 @@ namespace ZeroLocalizationToolGUI
                         break;
                     case Keys.Q:
                         Application.Exit();
+                        e.Handled = true;
+                        break;
+                }
+            }
+
+            if (e.Modifiers == (Keys.Control | Keys.Shift))
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.C:
+                        Command_CopyKeyPath();
                         e.Handled = true;
                         break;
                 }
@@ -284,12 +295,14 @@ namespace ZeroLocalizationToolGUI
                 addScopeToolStripMenuItem.Enabled = true;
                 addKeyToolStripMenuItem.Enabled = true;
                 btn_CopyEnglishValueToOtherLangs.Enabled = false;
+                copyKeyPathToolStripMenuItem1.Enabled = false;
             }
             else if (e.Node.Tag is Key)
             {
                 addScopeToolStripMenuItem.Enabled = false;
                 addKeyToolStripMenuItem.Enabled = true;
                 btn_CopyEnglishValueToOtherLangs.Enabled = true;
+                copyKeyPathToolStripMenuItem1.Enabled = true;
             }
 
             string keyPath = e.Node.FullPath;
@@ -1238,6 +1251,11 @@ namespace ZeroLocalizationToolGUI
         }
 
         private void copyKeyPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Command_CopyKeyPath();
+        }
+
+        void Command_CopyKeyPath()
         {
             if (!string.IsNullOrEmpty(lbl_NodePath.Text))
             {
