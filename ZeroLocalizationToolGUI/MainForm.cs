@@ -1232,5 +1232,13 @@ namespace ZeroLocalizationToolGUI
                 Debug.WriteLine(string.Format("{0} has {1} keys", lang, localizationConfigs[lang].LocalizationDataBase.AllKeys.Count));
             }
         }
+
+        private void copyKeyPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(lbl_NodePath.Text))
+            {
+                Clipboard.SetText(lbl_NodePath.Text);
+            }
+        }
     }
 }

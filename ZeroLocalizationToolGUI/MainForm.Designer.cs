@@ -71,6 +71,8 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Main = new System.Windows.Forms.SplitContainer();
             this.splitContainer_Languages = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
+            this.cntxt_KeyPath = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyKeyPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.cntxt_RootLevel.SuspendLayout();
             this.cntxt_Scope.SuspendLayout();
@@ -87,6 +89,7 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Languages.Panel1.SuspendLayout();
             this.splitContainer_Languages.Panel2.SuspendLayout();
             this.splitContainer_Languages.SuspendLayout();
+            this.cntxt_KeyPath.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -233,6 +236,7 @@ namespace ZeroLocalizationToolGUI
             // lbl_NodePath
             // 
             this.lbl_NodePath.AutoSize = true;
+            this.lbl_NodePath.ContextMenuStrip = this.cntxt_KeyPath;
             this.lbl_NodePath.Location = new System.Drawing.Point(4, 0);
             this.lbl_NodePath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_NodePath.Name = "lbl_NodePath";
@@ -505,6 +509,21 @@ namespace ZeroLocalizationToolGUI
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // cntxt_KeyPath
+            // 
+            this.cntxt_KeyPath.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.cntxt_KeyPath.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyKeyPathToolStripMenuItem});
+            this.cntxt_KeyPath.Name = "cntxt_KeyPath";
+            this.cntxt_KeyPath.Size = new System.Drawing.Size(199, 36);
+            // 
+            // copyKeyPathToolStripMenuItem
+            // 
+            this.copyKeyPathToolStripMenuItem.Name = "copyKeyPathToolStripMenuItem";
+            this.copyKeyPathToolStripMenuItem.Size = new System.Drawing.Size(198, 32);
+            this.copyKeyPathToolStripMenuItem.Text = "Copy Key Path";
+            this.copyKeyPathToolStripMenuItem.Click += new System.EventHandler(this.copyKeyPathToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -541,6 +560,7 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Languages.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_Languages)).EndInit();
             this.splitContainer_Languages.ResumeLayout(false);
+            this.cntxt_KeyPath.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -587,6 +607,8 @@ namespace ZeroLocalizationToolGUI
         private System.Windows.Forms.SplitContainer splitContainer_Main;
         private System.Windows.Forms.SplitContainer splitContainer_Languages;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ContextMenuStrip cntxt_KeyPath;
+        private System.Windows.Forms.ToolStripMenuItem copyKeyPathToolStripMenuItem;
     }
 }
 
