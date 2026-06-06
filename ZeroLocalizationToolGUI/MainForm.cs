@@ -35,7 +35,11 @@ namespace ZeroLocalizationToolGUI
         public MainForm()
 		{
 			InitializeComponent();
-		}
+
+            rtb_OriginalText.EnableContextMenu();
+            rtb_TranslatedText.EnableContextMenu();
+            rtb_Comments.EnableContextMenu();
+        }
 
 		enum ELocalizationTextFieldType
 		{
