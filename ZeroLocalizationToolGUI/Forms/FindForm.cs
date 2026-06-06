@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -78,6 +79,18 @@ namespace ZeroLocalizationToolGUI.Forms
         {
             if (cmb_SearchExpression.Text != string.Empty)
             {
+                if (chk_UseRegex.Checked)
+                {
+                    try
+                    {
+                        Regex regex = new Regex(cmb_SearchExpression.Text);
+                    }
+                    catch (ArgumentException)
+                    {
+                        MessageBox.Show("The Regular Expression supplied is invalid.", "Regular Expression Invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
                 list_Results.Items.Clear();
                 BeginFindAll();
             }
@@ -90,7 +103,8 @@ namespace ZeroLocalizationToolGUI.Forms
                 MainForm.NodeNameSearchQuery searchQuery = new MainForm.NodeNameSearchQuery()
                 {
                     Expression = cmb_SearchExpression.Text,
-                    MatchWholeExpression = chk_MatchWholeExpression.Checked
+                    MatchWholeExpression = chk_MatchWholeExpression.Checked,
+                    IsRegex = chk_UseRegex.Checked
                 };
 
                 List<MainForm.NodeNameSearchResult> results = mainForm.BeginNodeNameSearch(searchQuery);
@@ -113,6 +127,7 @@ namespace ZeroLocalizationToolGUI.Forms
                     Expression = cmb_SearchExpression.Text,
                     MatchWholeExpression = chk_MatchWholeExpression.Checked,
                     MatchCase = chk_MatchCase.Checked,
+                    IsRegex = chk_UseRegex.Checked,
                     Languages = langs.ToArray()
                 };
 

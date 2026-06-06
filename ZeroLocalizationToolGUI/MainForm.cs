@@ -52,6 +52,7 @@ namespace ZeroLocalizationToolGUI
         {
             public string Expression;
             public bool MatchWholeExpression;
+            public bool IsRegex;
         }
 
         public struct NodeNameSearchResult
@@ -64,6 +65,7 @@ namespace ZeroLocalizationToolGUI
             public string Expression;
             public bool MatchWholeExpression;
             public bool MatchCase;
+            public bool IsRegex;
             public string[] Languages;
         }
 
@@ -1088,21 +1090,30 @@ namespace ZeroLocalizationToolGUI
             List<NodeNameSearchResult> results = new List<NodeNameSearchResult>();
             List<TreeNode> foundNodes = new List<TreeNode>();
 
-            if (query.MatchWholeExpression)
+            if (query.IsRegex)
             {
                 foundNodes = Collect(treeView_Database.Nodes)
-                    .Where(n => n.FullPath.Contains(query.Expression))
+                    .Where(n => Regex.IsMatch(n.FullPath, query.Expression))
                     .ToList();
             }
             else
             {
-                string[] parsedExpression = query.Expression.Split(' ');
-
-                foreach (string expressionPart in parsedExpression)
+                if (query.MatchWholeExpression)
                 {
-                    foundNodes.AddRange(Collect(treeView_Database.Nodes)
-                        .Where(n => n.FullPath.Contains(expressionPart))
-                        .ToList());
+                    foundNodes = Collect(treeView_Database.Nodes)
+                        .Where(n => n.FullPath.Contains(query.Expression))
+                        .ToList();
+                }
+                else
+                {
+                    string[] parsedExpression = query.Expression.Split(' ');
+
+                    foreach (string expressionPart in parsedExpression)
+                    {
+                        foundNodes.AddRange(Collect(treeView_Database.Nodes)
+                            .Where(n => n.FullPath.Contains(expressionPart))
+                            .ToList());
+                    }
                 }
             }
 
@@ -1139,7 +1150,9 @@ namespace ZeroLocalizationToolGUI
                     dataBase = localizationConfigs[lang].LocalizationDataBase;
                 }
 
-                if (query.MatchWholeExpression)
+
+
+                if (query.IsRegex)
                 {
                     foreach (TreeNode node in allKeyNodes)
                     {
@@ -1147,15 +1160,7 @@ namespace ZeroLocalizationToolGUI
                         if (nodeKey == null)
                             continue;
 
-                        bool querySuccess;
-                        if (query.MatchCase)
-                        {
-                            querySuccess = nodeKey.GetValue().Contains(query.Expression);
-                        }
-                        else
-                        {
-                            querySuccess = nodeKey.GetValue().ToLower().Contains(query.Expression.ToLower());
-                        }
+                        bool querySuccess = Regex.IsMatch(nodeKey.GetValue(), query.Expression);
 
                         if (querySuccess)
                         {
@@ -1171,9 +1176,7 @@ namespace ZeroLocalizationToolGUI
                 }
                 else
                 {
-                    string[] parsedExpression = query.Expression.Split(' ');
-
-                    foreach (string expressionPart in parsedExpression)
+                    if (query.MatchWholeExpression)
                     {
                         foreach (TreeNode node in allKeyNodes)
                         {
@@ -1184,11 +1187,11 @@ namespace ZeroLocalizationToolGUI
                             bool querySuccess;
                             if (query.MatchCase)
                             {
-                                querySuccess = nodeKey.GetValue().Contains(expressionPart);
+                                querySuccess = nodeKey.GetValue().Contains(query.Expression);
                             }
                             else
                             {
-                                querySuccess = nodeKey.GetValue().ToLower().Contains(expressionPart.ToLower());
+                                querySuccess = nodeKey.GetValue().ToLower().Contains(query.Expression.ToLower());
                             }
 
                             if (querySuccess)
@@ -1200,6 +1203,41 @@ namespace ZeroLocalizationToolGUI
                                     Text = nodeKey.GetValue()
                                 };
                                 results.Add(newResult);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string[] parsedExpression = query.Expression.Split(' ');
+
+                        foreach (string expressionPart in parsedExpression)
+                        {
+                            foreach (TreeNode node in allKeyNodes)
+                            {
+                                Key nodeKey = dataBase.GetKey(node.FullPath);
+                                if (nodeKey == null)
+                                    continue;
+
+                                bool querySuccess;
+                                if (query.MatchCase)
+                                {
+                                    querySuccess = nodeKey.GetValue().Contains(expressionPart);
+                                }
+                                else
+                                {
+                                    querySuccess = nodeKey.GetValue().ToLower().Contains(expressionPart.ToLower());
+                                }
+
+                                if (querySuccess)
+                                {
+                                    TranslationSearchResult newResult = new TranslationSearchResult()
+                                    {
+                                        Language = lang,
+                                        NodePath = node.FullPath,
+                                        Text = nodeKey.GetValue()
+                                    };
+                                    results.Add(newResult);
+                                }
                             }
                         }
                     }

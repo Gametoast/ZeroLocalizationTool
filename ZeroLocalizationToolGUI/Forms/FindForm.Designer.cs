@@ -43,6 +43,7 @@
             this.ResultPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ResultText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label2 = new System.Windows.Forms.Label();
+            this.chk_UseRegex = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -195,12 +196,24 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Search results:";
             // 
+            // chk_UseRegex
+            // 
+            this.chk_UseRegex.AutoSize = true;
+            this.chk_UseRegex.Location = new System.Drawing.Point(9, 154);
+            this.chk_UseRegex.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_UseRegex.Name = "chk_UseRegex";
+            this.chk_UseRegex.Size = new System.Drawing.Size(139, 17);
+            this.chk_UseRegex.TabIndex = 12;
+            this.chk_UseRegex.Text = "Use Regular Expression";
+            this.chk_UseRegex.UseVisualStyleBackColor = true;
+            // 
             // FindForm
             // 
             this.AcceptButton = this.btn_FindAll;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(825, 495);
+            this.Controls.Add(this.chk_UseRegex);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.list_Results);
             this.Controls.Add(this.groupBox1);
@@ -238,5 +251,6 @@
         private System.Windows.Forms.ColumnHeader ResultLanguage;
         private System.Windows.Forms.ColumnHeader ResultPath;
         private System.Windows.Forms.ColumnHeader ResultText;
+        private System.Windows.Forms.CheckBox chk_UseRegex;
     }
 }
