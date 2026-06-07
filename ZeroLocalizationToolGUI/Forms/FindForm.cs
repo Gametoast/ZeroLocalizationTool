@@ -98,6 +98,18 @@ namespace ZeroLocalizationToolGUI.Forms
 
         void BeginFindAll()
         {
+            if (cmb_SearchExpression.Items.Count > 0)
+            {
+                if (cmb_SearchExpression.Items[0] as string != cmb_SearchExpression.Text)
+                {
+                    cmb_SearchExpression.Items.Insert(0, cmb_SearchExpression.Text);
+                }
+            }
+            else
+            {
+                cmb_SearchExpression.Items.Insert(0, cmb_SearchExpression.Text);
+            }
+
             if (rad_KeyScopeNames.Checked)
             {
                 MainForm.NodeNameSearchQuery searchQuery = new MainForm.NodeNameSearchQuery()
