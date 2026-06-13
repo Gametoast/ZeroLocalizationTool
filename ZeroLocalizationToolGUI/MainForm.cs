@@ -78,6 +78,7 @@ namespace ZeroLocalizationToolGUI
 
         private void MainForm_Load(object sender, EventArgs e)
 		{
+            MessageBox.Show("This is application is licensed under the BSD 3-Clause license; by continuing to use it you agree to its terms. This application is a work in progress and some features may not work as expected. It comes with NO WARRANTY and the creators are not responsible for any loss of data. Always make backups before using experimental tools in your production workflows.\n\nPlease report any issues at https://github.com/Gametoast/ZeroLocalizationTool\n\nSee the About page for the full license terms.", "Disclaimer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			lbl_NodePath.Text = string.Empty;
 
             ShowDialog_Open();
@@ -86,7 +87,7 @@ namespace ZeroLocalizationToolGUI
         void ShowDialog_Open()
         {
 
-            openDlg_AddProjectPrompt.Title = "Open Localization Folder";
+            openDlg_AddProjectPrompt.Title = "Open 'Localize' folder containing .CFG files";
             openDlg_AddProjectPrompt.IsFolderPicker = true;
 
             bool englishFound = false;
@@ -264,6 +265,12 @@ namespace ZeroLocalizationToolGUI
 
         void ShowWindow_Find()
         {
+            if (!isProjectLoaded)
+            {
+                ShowDialog_ProjectNotLoaded();
+                return;
+            }
+
             FindForm findForm = new FindForm();
             findForm.Show(this);
         }
@@ -1021,6 +1028,12 @@ namespace ZeroLocalizationToolGUI
 
         private void copyEnglishToOtherLanguagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!isProjectLoaded)
+            {
+                ShowDialog_ProjectNotLoaded();
+                return;
+            }
+
             List<TreeNode> allKeyNodes = Collect(treeView_Database.Nodes)
                 .Where(n => n.Tag is Key)
                 .ToList();
@@ -1282,10 +1295,12 @@ namespace ZeroLocalizationToolGUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (string lang in localizationConfigs.Keys)
-            {
-                Debug.WriteLine(string.Format("{0} has {1} keys", lang, localizationConfigs[lang].LocalizationDataBase.AllKeys.Count));
-            }
+            Key key = localizationConfigs["english"].LocalizationDataBase.GetKey(selectedNode.FullPath);
+            Debug.WriteLine(key.Value);
+            //foreach (string str in key.BinaryValues)
+            //{
+            //    Debug.WriteLine(str);
+            //}
         }
 
         private void copyKeyPathToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1295,6 +1310,12 @@ namespace ZeroLocalizationToolGUI
 
         void Command_CopyKeyPath()
         {
+            if (!isProjectLoaded)
+            {
+                ShowDialog_ProjectNotLoaded();
+                return;
+            }
+
             if (!string.IsNullOrEmpty(lbl_NodePath.Text))
             {
                 Clipboard.SetText(lbl_NodePath.Text);
