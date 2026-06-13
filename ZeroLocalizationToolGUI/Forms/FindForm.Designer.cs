@@ -52,26 +52,29 @@
             this.cmb_SearchExpression.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cmb_SearchExpression.FormattingEnabled = true;
-            this.cmb_SearchExpression.Location = new System.Drawing.Point(84, 18);
+            this.cmb_SearchExpression.Location = new System.Drawing.Point(69, 15);
+            this.cmb_SearchExpression.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmb_SearchExpression.Name = "cmb_SearchExpression";
-            this.cmb_SearchExpression.Size = new System.Drawing.Size(579, 24);
+            this.cmb_SearchExpression.Size = new System.Drawing.Size(429, 21);
             this.cmb_SearchExpression.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 21);
+            this.label1.Location = new System.Drawing.Point(9, 17);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 16);
+            this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Find what:";
             // 
             // chk_MatchWholeExpression
             // 
             this.chk_MatchWholeExpression.AutoSize = true;
-            this.chk_MatchWholeExpression.Location = new System.Drawing.Point(12, 138);
+            this.chk_MatchWholeExpression.Location = new System.Drawing.Point(9, 112);
+            this.chk_MatchWholeExpression.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.chk_MatchWholeExpression.Name = "chk_MatchWholeExpression";
-            this.chk_MatchWholeExpression.Size = new System.Drawing.Size(200, 20);
+            this.chk_MatchWholeExpression.Size = new System.Drawing.Size(162, 17);
             this.chk_MatchWholeExpression.TabIndex = 2;
             this.chk_MatchWholeExpression.Text = "Match whole expression only";
             this.chk_MatchWholeExpression.UseVisualStyleBackColor = true;
@@ -79,9 +82,10 @@
             // chk_MatchCase
             // 
             this.chk_MatchCase.AutoSize = true;
-            this.chk_MatchCase.Location = new System.Drawing.Point(12, 164);
+            this.chk_MatchCase.Location = new System.Drawing.Point(9, 133);
+            this.chk_MatchCase.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.chk_MatchCase.Name = "chk_MatchCase";
-            this.chk_MatchCase.Size = new System.Drawing.Size(98, 20);
+            this.chk_MatchCase.Size = new System.Drawing.Size(82, 17);
             this.chk_MatchCase.TabIndex = 3;
             this.chk_MatchCase.Text = "Match case";
             this.chk_MatchCase.UseVisualStyleBackColor = true;
@@ -90,27 +94,30 @@
             // 
             this.chklist_Languages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chklist_Languages.FormattingEnabled = true;
-            this.chklist_Languages.Location = new System.Drawing.Point(642, 74);
+            this.chklist_Languages.Location = new System.Drawing.Point(482, 60);
+            this.chklist_Languages.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.chklist_Languages.Name = "chklist_Languages";
-            this.chklist_Languages.Size = new System.Drawing.Size(171, 191);
+            this.chklist_Languages.Size = new System.Drawing.Size(129, 154);
             this.chklist_Languages.TabIndex = 5;
             // 
             // lbl_LanguagesToSearch
             // 
             this.lbl_LanguagesToSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_LanguagesToSearch.AutoSize = true;
-            this.lbl_LanguagesToSearch.Location = new System.Drawing.Point(642, 49);
+            this.lbl_LanguagesToSearch.Location = new System.Drawing.Point(482, 40);
+            this.lbl_LanguagesToSearch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lbl_LanguagesToSearch.Name = "lbl_LanguagesToSearch";
-            this.lbl_LanguagesToSearch.Size = new System.Drawing.Size(136, 16);
+            this.lbl_LanguagesToSearch.Size = new System.Drawing.Size(110, 13);
             this.lbl_LanguagesToSearch.TabIndex = 5;
             this.lbl_LanguagesToSearch.Text = "Languages to search:";
             // 
             // btn_FindAll
             // 
             this.btn_FindAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_FindAll.Location = new System.Drawing.Point(669, 15);
+            this.btn_FindAll.Location = new System.Drawing.Point(502, 12);
+            this.btn_FindAll.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_FindAll.Name = "btn_FindAll";
-            this.btn_FindAll.Size = new System.Drawing.Size(144, 28);
+            this.btn_FindAll.Size = new System.Drawing.Size(108, 23);
             this.btn_FindAll.TabIndex = 8;
             this.btn_FindAll.Text = "Find All";
             this.btn_FindAll.UseVisualStyleBackColor = true;
@@ -120,9 +127,11 @@
             // 
             this.groupBox1.Controls.Add(this.rad_TranslationText);
             this.groupBox1.Controls.Add(this.rad_KeyScopeNames);
-            this.groupBox1.Location = new System.Drawing.Point(12, 48);
+            this.groupBox1.Location = new System.Drawing.Point(9, 39);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(164, 84);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(123, 68);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Search for:";
@@ -130,9 +139,10 @@
             // rad_TranslationText
             // 
             this.rad_TranslationText.AutoSize = true;
-            this.rad_TranslationText.Location = new System.Drawing.Point(7, 49);
+            this.rad_TranslationText.Location = new System.Drawing.Point(5, 40);
+            this.rad_TranslationText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.rad_TranslationText.Name = "rad_TranslationText";
-            this.rad_TranslationText.Size = new System.Drawing.Size(118, 20);
+            this.rad_TranslationText.Size = new System.Drawing.Size(97, 17);
             this.rad_TranslationText.TabIndex = 1;
             this.rad_TranslationText.Text = "Translation text";
             this.rad_TranslationText.UseVisualStyleBackColor = true;
@@ -142,9 +152,10 @@
             // 
             this.rad_KeyScopeNames.AutoSize = true;
             this.rad_KeyScopeNames.Checked = true;
-            this.rad_KeyScopeNames.Location = new System.Drawing.Point(7, 22);
+            this.rad_KeyScopeNames.Location = new System.Drawing.Point(5, 18);
+            this.rad_KeyScopeNames.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.rad_KeyScopeNames.Name = "rad_KeyScopeNames";
-            this.rad_KeyScopeNames.Size = new System.Drawing.Size(139, 20);
+            this.rad_KeyScopeNames.Size = new System.Drawing.Size(113, 17);
             this.rad_KeyScopeNames.TabIndex = 0;
             this.rad_KeyScopeNames.TabStop = true;
             this.rad_KeyScopeNames.Text = "Key/Scope names";
@@ -164,9 +175,10 @@
             this.list_Results.FullRowSelect = true;
             this.list_Results.GridLines = true;
             this.list_Results.HideSelection = false;
-            this.list_Results.Location = new System.Drawing.Point(12, 271);
+            this.list_Results.Location = new System.Drawing.Point(9, 220);
+            this.list_Results.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.list_Results.Name = "list_Results";
-            this.list_Results.Size = new System.Drawing.Size(801, 212);
+            this.list_Results.Size = new System.Drawing.Size(602, 173);
             this.list_Results.TabIndex = 4;
             this.list_Results.UseCompatibleStateImageBehavior = false;
             this.list_Results.View = System.Windows.Forms.View.Details;
@@ -190,9 +202,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 249);
+            this.label2.Location = new System.Drawing.Point(9, 202);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 16);
+            this.label2.Size = new System.Drawing.Size(77, 13);
             this.label2.TabIndex = 11;
             this.label2.Text = "Search results:";
             // 
@@ -210,9 +223,9 @@
             // FindForm
             // 
             this.AcceptButton = this.btn_FindAll;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 495);
+            this.ClientSize = new System.Drawing.Size(619, 402);
             this.Controls.Add(this.chk_UseRegex);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.list_Results);
@@ -224,6 +237,7 @@
             this.Controls.Add(this.chk_MatchWholeExpression);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmb_SearchExpression);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "FindForm";
             this.Text = "Find";
             this.Load += new System.EventHandler(this.FindForm_Load);
