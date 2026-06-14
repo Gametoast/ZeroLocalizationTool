@@ -44,6 +44,7 @@
             this.ResultText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label2 = new System.Windows.Forms.Label();
             this.chk_UseRegex = new System.Windows.Forms.CheckBox();
+            this.formToolTips = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -266,5 +267,6 @@
         private System.Windows.Forms.ColumnHeader ResultPath;
         private System.Windows.Forms.ColumnHeader ResultText;
         private System.Windows.Forms.CheckBox chk_UseRegex;
+        private System.Windows.Forms.ToolTip formToolTips;
     }
 }

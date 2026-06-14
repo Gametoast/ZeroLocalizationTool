@@ -74,6 +74,7 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Main = new System.Windows.Forms.SplitContainer();
             this.splitContainer_Languages = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
+            this.formToolTips = new System.Windows.Forms.ToolTip(this.components);
             this.menuStrip1.SuspendLayout();
             this.cntxt_KeyPath.SuspendLayout();
             this.cntxt_RootLevel.SuspendLayout();
@@ -633,6 +634,7 @@ namespace ZeroLocalizationToolGUI
         private System.Windows.Forms.ContextMenuStrip cntxt_KeyPath;
         private System.Windows.Forms.ToolStripMenuItem copyKeyPathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyKeyPathToolStripMenuItem1;
+        private System.Windows.Forms.ToolTip formToolTips;
     }
 }
 

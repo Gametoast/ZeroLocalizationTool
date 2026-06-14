@@ -39,6 +39,10 @@ namespace ZeroLocalizationToolGUI
             rtb_OriginalText.EnableContextMenu();
             rtb_TranslatedText.EnableContextMenu();
             rtb_Comments.EnableContextMenu();
+
+            formToolTips.AutoPopDelay = 10000;
+            formToolTips.SetToolTip(btn_CopyEnglishValueToOtherLangs, "This will copy the English value into any untranslated (blank) language values for this key.");
+            copyEnglishToOtherLanguagesToolStripMenuItem.ToolTipText = "This will go through all keys in the database and copy the English value into any untranslated (blank) language values for each key.";
         }
 
 		enum ELocalizationTextFieldType

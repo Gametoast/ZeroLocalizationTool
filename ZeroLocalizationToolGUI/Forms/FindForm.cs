@@ -23,6 +23,11 @@ namespace ZeroLocalizationToolGUI.Forms
         public FindForm()
         {
             InitializeComponent();
+
+            formToolTips.AutoPopDelay = 10000;
+            formToolTips.SetToolTip(chk_MatchCase, "Only show results that match the case of each character exactly.");
+            formToolTips.SetToolTip(chk_MatchWholeExpression, "Only show results that match the entire search expression as written.");
+            formToolTips.SetToolTip(chk_UseRegex, "Use Regular Expression for more powerful results filtering. See https://regexone.com/ or ask an LLM for help with Regular Expressions.");
         }
 
         private void FindForm_Load(object sender, EventArgs e)
