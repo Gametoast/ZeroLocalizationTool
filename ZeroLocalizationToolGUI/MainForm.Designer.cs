@@ -232,7 +232,7 @@ namespace ZeroLocalizationToolGUI
             // submitIssueOnGitHubToolStripMenuItem
             // 
             this.submitIssueOnGitHubToolStripMenuItem.Name = "submitIssueOnGitHubToolStripMenuItem";
-            this.submitIssueOnGitHubToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.submitIssueOnGitHubToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.submitIssueOnGitHubToolStripMenuItem.Text = "Report Issue...";
             this.submitIssueOnGitHubToolStripMenuItem.ToolTipText = "Report a bug or request a feature.";
             this.submitIssueOnGitHubToolStripMenuItem.Click += new System.EventHandler(this.submitIssueOnGitHubToolStripMenuItem_Click);
@@ -241,7 +241,7 @@ namespace ZeroLocalizationToolGUI
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -334,7 +334,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_TranslatedText.Enabled = false;
             this.rtb_TranslatedText.Location = new System.Drawing.Point(3, 33);
             this.rtb_TranslatedText.Name = "rtb_TranslatedText";
-            this.rtb_TranslatedText.Size = new System.Drawing.Size(548, 322);
+            this.rtb_TranslatedText.Size = new System.Drawing.Size(546, 320);
             this.rtb_TranslatedText.TabIndex = 3;
             this.rtb_TranslatedText.Text = "";
             this.rtb_TranslatedText.Visible = false;
@@ -348,7 +348,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_Comments.Enabled = false;
             this.rtb_Comments.Location = new System.Drawing.Point(3, 16);
             this.rtb_Comments.Name = "rtb_Comments";
-            this.rtb_Comments.Size = new System.Drawing.Size(211, 162);
+            this.rtb_Comments.Size = new System.Drawing.Size(209, 162);
             this.rtb_Comments.TabIndex = 4;
             this.rtb_Comments.Text = "";
             this.rtb_Comments.TextChanged += new System.EventHandler(this.rtb_Comments_TextChanged);
@@ -441,12 +441,11 @@ namespace ZeroLocalizationToolGUI
             // 
             // btn_CopyEnglishValueToOtherLangs
             // 
-            this.btn_CopyEnglishValueToOtherLangs.AutoSize = true;
             this.btn_CopyEnglishValueToOtherLangs.Enabled = false;
-            this.btn_CopyEnglishValueToOtherLangs.Location = new System.Drawing.Point(245, 3);
+            this.btn_CopyEnglishValueToOtherLangs.Location = new System.Drawing.Point(246, 4);
             this.btn_CopyEnglishValueToOtherLangs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btn_CopyEnglishValueToOtherLangs.Name = "btn_CopyEnglishValueToOtherLangs";
-            this.btn_CopyEnglishValueToOtherLangs.Size = new System.Drawing.Size(202, 25);
+            this.btn_CopyEnglishValueToOtherLangs.Size = new System.Drawing.Size(218, 23);
             this.btn_CopyEnglishValueToOtherLangs.TabIndex = 14;
             this.btn_CopyEnglishValueToOtherLangs.Text = "Copy English to Other Languages...";
             this.btn_CopyEnglishValueToOtherLangs.UseVisualStyleBackColor = true;
@@ -470,9 +469,9 @@ namespace ZeroLocalizationToolGUI
             // 
             this.splitContainer_EnglishComments.Panel2.Controls.Add(this.label1);
             this.splitContainer_EnglishComments.Panel2.Controls.Add(this.rtb_Comments);
-            this.splitContainer_EnglishComments.Size = new System.Drawing.Size(551, 180);
-            this.splitContainer_EnglishComments.SplitterDistance = 334;
-            this.splitContainer_EnglishComments.SplitterWidth = 3;
+            this.splitContainer_EnglishComments.Size = new System.Drawing.Size(549, 180);
+            this.splitContainer_EnglishComments.SplitterDistance = 332;
+            this.splitContainer_EnglishComments.SplitterWidth = 6;
             this.splitContainer_EnglishComments.TabIndex = 15;
             // 
             // rtb_OriginalText
@@ -483,7 +482,7 @@ namespace ZeroLocalizationToolGUI
             this.rtb_OriginalText.Enabled = false;
             this.rtb_OriginalText.Location = new System.Drawing.Point(3, 16);
             this.rtb_OriginalText.Name = "rtb_OriginalText";
-            this.rtb_OriginalText.Size = new System.Drawing.Size(329, 162);
+            this.rtb_OriginalText.Size = new System.Drawing.Size(327, 162);
             this.rtb_OriginalText.TabIndex = 4;
             this.rtb_OriginalText.Text = "";
             this.rtb_OriginalText.TextChanged += new System.EventHandler(this.rtb_OriginalText_TextChanged);
@@ -506,7 +505,7 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Main.Panel2.Controls.Add(this.splitContainer_Languages);
             this.splitContainer_Main.Size = new System.Drawing.Size(737, 552);
             this.splitContainer_Main.SplitterDistance = 175;
-            this.splitContainer_Main.SplitterWidth = 3;
+            this.splitContainer_Main.SplitterWidth = 6;
             this.splitContainer_Main.TabIndex = 16;
             // 
             // splitContainer_Languages
@@ -530,9 +529,9 @@ namespace ZeroLocalizationToolGUI
             this.splitContainer_Languages.Panel2.Controls.Add(this.cmb_CurLanguage);
             this.splitContainer_Languages.Panel2.Controls.Add(this.rtb_TranslatedText);
             this.splitContainer_Languages.Panel2.Controls.Add(this.btn_CopyEnglishValueToOtherLangs);
-            this.splitContainer_Languages.Size = new System.Drawing.Size(555, 547);
+            this.splitContainer_Languages.Size = new System.Drawing.Size(553, 547);
             this.splitContainer_Languages.SplitterDistance = 186;
-            this.splitContainer_Languages.SplitterWidth = 3;
+            this.splitContainer_Languages.SplitterWidth = 6;
             this.splitContainer_Languages.TabIndex = 17;
             // 
             // button1
@@ -549,8 +548,8 @@ namespace ZeroLocalizationToolGUI
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(755, 586);
             this.Controls.Add(this.splitContainer_Main);
             this.Controls.Add(this.menuStrip1);

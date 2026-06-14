@@ -53,7 +53,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cmb_SearchExpression.FormattingEnabled = true;
             this.cmb_SearchExpression.Location = new System.Drawing.Point(69, 15);
-            this.cmb_SearchExpression.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmb_SearchExpression.Margin = new System.Windows.Forms.Padding(2);
             this.cmb_SearchExpression.Name = "cmb_SearchExpression";
             this.cmb_SearchExpression.Size = new System.Drawing.Size(429, 21);
             this.cmb_SearchExpression.TabIndex = 0;
@@ -72,7 +72,7 @@
             // 
             this.chk_MatchWholeExpression.AutoSize = true;
             this.chk_MatchWholeExpression.Location = new System.Drawing.Point(9, 112);
-            this.chk_MatchWholeExpression.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chk_MatchWholeExpression.Margin = new System.Windows.Forms.Padding(2);
             this.chk_MatchWholeExpression.Name = "chk_MatchWholeExpression";
             this.chk_MatchWholeExpression.Size = new System.Drawing.Size(162, 17);
             this.chk_MatchWholeExpression.TabIndex = 2;
@@ -83,7 +83,7 @@
             // 
             this.chk_MatchCase.AutoSize = true;
             this.chk_MatchCase.Location = new System.Drawing.Point(9, 133);
-            this.chk_MatchCase.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chk_MatchCase.Margin = new System.Windows.Forms.Padding(2);
             this.chk_MatchCase.Name = "chk_MatchCase";
             this.chk_MatchCase.Size = new System.Drawing.Size(82, 17);
             this.chk_MatchCase.TabIndex = 3;
@@ -95,7 +95,7 @@
             this.chklist_Languages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chklist_Languages.FormattingEnabled = true;
             this.chklist_Languages.Location = new System.Drawing.Point(482, 60);
-            this.chklist_Languages.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chklist_Languages.Margin = new System.Windows.Forms.Padding(2);
             this.chklist_Languages.Name = "chklist_Languages";
             this.chklist_Languages.Size = new System.Drawing.Size(129, 154);
             this.chklist_Languages.TabIndex = 5;
@@ -115,7 +115,7 @@
             // 
             this.btn_FindAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_FindAll.Location = new System.Drawing.Point(502, 12);
-            this.btn_FindAll.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_FindAll.Margin = new System.Windows.Forms.Padding(2);
             this.btn_FindAll.Name = "btn_FindAll";
             this.btn_FindAll.Size = new System.Drawing.Size(108, 23);
             this.btn_FindAll.TabIndex = 8;
@@ -128,10 +128,10 @@
             this.groupBox1.Controls.Add(this.rad_TranslationText);
             this.groupBox1.Controls.Add(this.rad_KeyScopeNames);
             this.groupBox1.Location = new System.Drawing.Point(9, 39);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox1.Size = new System.Drawing.Size(123, 68);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(177, 68);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Search for:";
@@ -140,7 +140,7 @@
             // 
             this.rad_TranslationText.AutoSize = true;
             this.rad_TranslationText.Location = new System.Drawing.Point(5, 40);
-            this.rad_TranslationText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rad_TranslationText.Margin = new System.Windows.Forms.Padding(2);
             this.rad_TranslationText.Name = "rad_TranslationText";
             this.rad_TranslationText.Size = new System.Drawing.Size(97, 17);
             this.rad_TranslationText.TabIndex = 1;
@@ -153,7 +153,7 @@
             this.rad_KeyScopeNames.AutoSize = true;
             this.rad_KeyScopeNames.Checked = true;
             this.rad_KeyScopeNames.Location = new System.Drawing.Point(5, 18);
-            this.rad_KeyScopeNames.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rad_KeyScopeNames.Margin = new System.Windows.Forms.Padding(2);
             this.rad_KeyScopeNames.Name = "rad_KeyScopeNames";
             this.rad_KeyScopeNames.Size = new System.Drawing.Size(113, 17);
             this.rad_KeyScopeNames.TabIndex = 0;
@@ -176,7 +176,7 @@
             this.list_Results.GridLines = true;
             this.list_Results.HideSelection = false;
             this.list_Results.Location = new System.Drawing.Point(9, 220);
-            this.list_Results.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.list_Results.Margin = new System.Windows.Forms.Padding(2);
             this.list_Results.Name = "list_Results";
             this.list_Results.Size = new System.Drawing.Size(602, 173);
             this.list_Results.TabIndex = 4;
@@ -223,8 +223,8 @@
             // FindForm
             // 
             this.AcceptButton = this.btn_FindAll;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(619, 402);
             this.Controls.Add(this.chk_UseRegex);
             this.Controls.Add(this.label2);
