@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FindForm));
             this.cmb_SearchExpression = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chk_MatchWholeExpression = new System.Windows.Forms.CheckBox();
@@ -238,7 +240,8 @@
             this.Controls.Add(this.chk_MatchWholeExpression);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmb_SearchExpression);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FindForm";
             this.Text = "Find";
             this.Load += new System.EventHandler(this.FindForm_Load);
