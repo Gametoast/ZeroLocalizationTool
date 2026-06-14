@@ -102,7 +102,7 @@
             this.chklist_Languages.Margin = new System.Windows.Forms.Padding(2);
             this.chklist_Languages.Name = "chklist_Languages";
             this.chklist_Languages.Size = new System.Drawing.Size(129, 154);
-            this.chklist_Languages.TabIndex = 5;
+            this.chklist_Languages.TabIndex = 7;
             // 
             // lbl_LanguagesToSearch
             // 
@@ -183,7 +183,7 @@
             this.list_Results.Margin = new System.Windows.Forms.Padding(2);
             this.list_Results.Name = "list_Results";
             this.list_Results.Size = new System.Drawing.Size(602, 173);
-            this.list_Results.TabIndex = 4;
+            this.list_Results.TabIndex = 6;
             this.list_Results.UseCompatibleStateImageBehavior = false;
             this.list_Results.View = System.Windows.Forms.View.Details;
             this.list_Results.ItemActivate += new System.EventHandler(this.list_Results_ItemActivate);
@@ -220,7 +220,7 @@
             this.chk_UseRegex.Margin = new System.Windows.Forms.Padding(2);
             this.chk_UseRegex.Name = "chk_UseRegex";
             this.chk_UseRegex.Size = new System.Drawing.Size(139, 17);
-            this.chk_UseRegex.TabIndex = 12;
+            this.chk_UseRegex.TabIndex = 4;
             this.chk_UseRegex.Text = "Use Regular Expression";
             this.chk_UseRegex.UseVisualStyleBackColor = true;
             // 
