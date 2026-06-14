@@ -16,7 +16,7 @@ namespace ZeroLocalizationToolGUI.Forms
 {
     public partial class FindForm : Form
     {
-        MainForm mainForm;
+        public MainForm mainForm;
         int resultLanguageWidth;
         int resultTextWidth;
 
@@ -32,7 +32,6 @@ namespace ZeroLocalizationToolGUI.Forms
 
         private void FindForm_Load(object sender, EventArgs e)
         {
-            mainForm = Owner as MainForm;
             PopulateLanguages();
 
             lbl_LanguagesToSearch.Visible = rad_TranslationText.Checked;
@@ -119,7 +118,7 @@ namespace ZeroLocalizationToolGUI.Forms
             {
                 MainForm.NodeNameSearchQuery searchQuery = new MainForm.NodeNameSearchQuery()
                 {
-                    Expression = cmb_SearchExpression.Text,
+                    Expression = cmb_SearchExpression.Text.ToLower(),
                     MatchWholeExpression = chk_MatchWholeExpression.Checked,
                     IsRegex = chk_UseRegex.Checked
                 };
@@ -207,11 +206,11 @@ namespace ZeroLocalizationToolGUI.Forms
         {
             if (list_Results.Columns.Count == 1)
             {
-                mainForm.JumpToTreeViewNode(list_Results.SelectedItems[0].SubItems[0].Text);
+                mainForm.JumpToTreeViewNode(chk_ChangeFocus.Checked, list_Results.SelectedItems[0].SubItems[0].Text);
             }
             else
             {
-                mainForm.JumpToTreeViewNode(list_Results.SelectedItems[0].SubItems[1].Text, list_Results.SelectedItems[0].SubItems[0].Text);
+                mainForm.JumpToTreeViewNode(chk_ChangeFocus.Checked, list_Results.SelectedItems[0].SubItems[1].Text, list_Results.SelectedItems[0].SubItems[0].Text);
             }
         }
     }

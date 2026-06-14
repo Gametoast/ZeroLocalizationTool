@@ -82,7 +82,7 @@ namespace ZeroLocalizationToolGUI
 
         private void MainForm_Load(object sender, EventArgs e)
 		{
-            MessageBox.Show("This is application is licensed under the BSD 3-Clause license; by continuing to use it you agree to its terms. This application is a work in progress and some features may not work as expected. It comes with NO WARRANTY and the creators are not responsible for any loss of data. Always make backups before using experimental tools in your production workflows.\n\nPlease report any issues at https://github.com/Gametoast/ZeroLocalizationTool\n\nSee the About page for the full license terms.", "Disclaimer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("This application is licensed under the BSD 3-Clause license; by continuing to use it you agree to its terms. This application is a work in progress and some features may not work as expected. It comes with NO WARRANTY and the creators are not responsible for any loss of data. Always make backups before using experimental tools in your production workflows.\n\nPlease report any issues at https://github.com/Gametoast/ZeroLocalizationTool\n\nSee the About page for the full license terms.", "Disclaimer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			lbl_NodePath.Text = string.Empty;
 
             ShowDialog_Open();
@@ -276,7 +276,8 @@ namespace ZeroLocalizationToolGUI
             }
 
             FindForm findForm = new FindForm();
-            findForm.Show(this);
+            findForm.mainForm = this;
+            findForm.Show();
         }
 
         void MarkDirtyChanges(bool dirty)
@@ -1264,18 +1265,22 @@ namespace ZeroLocalizationToolGUI
             return results;
         }
 
-        public void JumpToTreeViewNode(string nodePath)
+        public void JumpToTreeViewNode(bool changeFocus, string nodePath)
         {
             TreeNode foundNode = GetNodeFromPath(treeView_Database.Nodes, nodePath);
-            this.Focus();
+            if (changeFocus)
+            {
+                this.Focus();
+                this.BringToFront();
+            }
             treeView_Database.SelectedNode = foundNode;
             foundNode.EnsureVisible();
             treeView_Database.Select();
         }
 
-        public void JumpToTreeViewNode(string nodePath, string language)
+        public void JumpToTreeViewNode(bool changeFocus, string nodePath, string language)
         {
-            JumpToTreeViewNode(nodePath);
+            JumpToTreeViewNode(changeFocus, nodePath);
             cmb_CurLanguage.SelectedIndex = cmb_CurLanguage.FindString(language);
         }
 

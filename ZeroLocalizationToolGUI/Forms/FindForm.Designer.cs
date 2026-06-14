@@ -47,6 +47,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.chk_UseRegex = new System.Windows.Forms.CheckBox();
             this.formToolTips = new System.Windows.Forms.ToolTip(this.components);
+            this.chk_ChangeFocus = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -223,12 +224,24 @@
             this.chk_UseRegex.Text = "Use Regular Expression";
             this.chk_UseRegex.UseVisualStyleBackColor = true;
             // 
+            // chk_ChangeFocus
+            // 
+            this.chk_ChangeFocus.AutoSize = true;
+            this.chk_ChangeFocus.Location = new System.Drawing.Point(9, 175);
+            this.chk_ChangeFocus.Margin = new System.Windows.Forms.Padding(2);
+            this.chk_ChangeFocus.Name = "chk_ChangeFocus";
+            this.chk_ChangeFocus.Size = new System.Drawing.Size(238, 17);
+            this.chk_ChangeFocus.TabIndex = 5;
+            this.chk_ChangeFocus.Text = "Change window focus when selecting results";
+            this.chk_ChangeFocus.UseVisualStyleBackColor = true;
+            // 
             // FindForm
             // 
             this.AcceptButton = this.btn_FindAll;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(619, 402);
+            this.Controls.Add(this.chk_ChangeFocus);
             this.Controls.Add(this.chk_UseRegex);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.list_Results);
@@ -271,5 +284,6 @@
         private System.Windows.Forms.ColumnHeader ResultText;
         private System.Windows.Forms.CheckBox chk_UseRegex;
         private System.Windows.Forms.ToolTip formToolTips;
+        private System.Windows.Forms.CheckBox chk_ChangeFocus;
     }
 }
